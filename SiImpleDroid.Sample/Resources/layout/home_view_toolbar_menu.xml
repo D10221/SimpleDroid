@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<menu>
+  
+  <item  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/action_attach"
+		android:icon="@drawable/ic_settings_white_24dp"
+		android:title="Home Options"
+		app:showAsAction="never"/>
+</menu>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+  <string name="Hello">Hello</string>
+  <string name="ApplicationName">Simple Droid</string>
+  <string name="navigation_header_view_brand">SimpleDroid©</string>
+  <string name="navigation_header_view_bottom_line">Bottom line...</string>
+  <string name="use_fingerprint_to_authenticate_key">use fingerprint to authenticate key</string>
+  <string name="ToolbarTitle">Simple Droidt</string>
+  <string name="close_drawer">Close</string>
+  <string name="open_drawer">Open</string>
+</resources>
