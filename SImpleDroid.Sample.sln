@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDroid.Sample", "SiImpleDroid.Sample\SimpleDroid.Sample.csproj", "{28E3D893-43E4-45B2-94F0-E921553C9E33}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SimpleDroid", "SimpleDroid\SimpleDroid.shproj", "{FBAC5ABE-9691-4185-B914-82BF2BDB7D20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDroid.Sample", "SimpleDroid.Sample\SimpleDroid.Sample.csproj", "{28E3D893-43E4-45B2-94F0-E921553C9E33}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
