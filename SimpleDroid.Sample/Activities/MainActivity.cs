@@ -20,11 +20,11 @@ namespace SimpleDroid
 
         protected override int ActivityLayout { get; } = Resource.Layout.Main;
         protected override int ToolbarLayout { get; } = Resource.Id.Toolbar;
-
         protected override int ToolbarTitle { get; } = Resource.String.ApplicationName;
         protected override int DrawerLayoutID { get; } = Resource.Id.app_bar_main;
         protected override int NavigationViewID { get; } = Resource.Id.navigation_view;
         public override int FragmentContainerID { get; } = Resource.Id.fragment_container;
+        protected override int ExitPromptMessageId { get; } = Resource.String.exit_prompt_message;
 
         [Inject]
         private NavigatorFty NavigatorFty { get; set; }
@@ -53,16 +53,22 @@ namespace SimpleDroid
                 .StartWith(Resource.Id.nav_home)
                 .Subscribe(Navigate)
                 .ToBeDisposedBy(this);
+
+            this.When(nameof(base.OnNavigationItemSelected))
+                .Select(e => (e.Value as IMenuItem)?.ItemId ?? 0 )
+                .Where(itemId => itemId ==  Resource.Id.nav_exit)                        
+                .Subscribe(Exit)
+                .ToBeDisposedBy(this);
         }
 
+        void Exit(int itemId)
+        {
+            if (itemId != Resource.Id.nav_exit) return;
+            GetExitPromptDialogBuilder((s, e) => App.Current.Exit()).Show();
+        }
         void Navigate(int itemId)
         {
-            if (itemId == Resource.Id.nav_exit)
-            {
-                App.Current.Exit();
-                return;
-            }
-
+            if (itemId == Resource.Id.nav_exit) return;
             Navigator.Navigate(itemId);
         }
     }

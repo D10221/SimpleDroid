@@ -2689,6 +2689,9 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f07001f
 			public const int exit = 2131165215;
 			
+			// aapt resource value: 0x7f070024
+			public const int exit_prompt_message = 2131165220;
+			
 			// aapt resource value: 0x7f070022
 			public const int home = 2131165218;
 			

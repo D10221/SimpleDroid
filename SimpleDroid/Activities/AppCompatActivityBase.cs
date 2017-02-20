@@ -4,12 +4,14 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
+using Android.Content;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Views;
+using Java.Lang;
 using NLog;
 using TinyIoC;
 
@@ -24,7 +26,7 @@ namespace SimpleDroid
 
         private Logger _logger;
         protected Logger Logger => _logger ?? (_logger = LogManager.GetCurrentClassLogger());
-     
+
         protected virtual int ToolbarLayout { get; } = 0;
 
         private Toolbar _toolbar;
@@ -58,6 +60,7 @@ namespace SimpleDroid
         protected virtual int NavigationViewID { get; } = 0;
 
         private NavigationView _navigationView;
+
         protected virtual NavigationView NavigationView
         {
             get
@@ -67,9 +70,10 @@ namespace SimpleDroid
                 return _navigationView;
             }
         }
+
         protected abstract int ToolbarTitle { get; }
         protected abstract int ActivityLayout { get; }
-        
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -97,6 +101,7 @@ namespace SimpleDroid
 
         protected virtual int OpenDrawerContentDescRes { get; } = 0;
         protected virtual int CloseDrawerContentDescRes { get; } = 0;
+
         private void DrawerSetup()
         {
             if (Drawer == null) return;
@@ -142,18 +147,18 @@ namespace SimpleDroid
 
                     OnMenuInflated(menu);
                 }
-            }          
+            }
         }
 
         protected virtual void OnMenuInflated(IMenu menu)
         {
-            RaiseEvent(menu);           
+            RaiseEvent(menu);
         }
 
         public virtual int FragmentContainerID { get; } = 0;
         public ViewState ViewState { get; private set; }
 
-        private readonly Subject<IEventArgs> _events=  new Subject<IEventArgs>();
+        private readonly Subject<IEventArgs> _events = new Subject<IEventArgs>();
         public IObservable<IEventArgs> Events => _events.AsObservable();
 
         public IList<IDisposable> Disposables { get; } = new List<IDisposable>();
@@ -166,10 +171,10 @@ namespace SimpleDroid
         protected virtual void OnNavigationItemSelected(object sender,
             NavigationView.NavigationItemSelectedEventArgs args)
         {
-            RaiseEvent(args.MenuItem);           
+            RaiseEvent(args.MenuItem);
             Drawer.CloseDrawers();
         }
-      
+
         protected override void OnRestart()
         {
             ViewState = ViewState.Restarting;
@@ -194,7 +199,7 @@ namespace SimpleDroid
         protected override void OnPause()
         {
             ViewState = ViewState.Pausing;
-            RaiseEvent();            
+            RaiseEvent();
             base.OnPause();
         }
 
@@ -219,18 +224,43 @@ namespace SimpleDroid
         }
 
         /// <summary>
+        /// If ExitPromptMessageId == 0 then No Prompt 
+        /// </summary>
+        protected virtual int ExitPromptMessageId { get; } = 0;  
+        protected virtual int YesId { get; set; }
+        protected virtual int NoId { get; set; }
+        /// <summary>
         /// Don't exit on OnBackPressed
         /// </summary>
         public override void OnBackPressed()
         {
-            if (FragmentManager.BackStackEntryCount == 0)
+            if (FragmentManager.BackStackEntryCount > 0)
+            {
+                FragmentManager.PopBackStack();
+                return;
+            }
+
+            if (ExitPromptMessageId == 0)
             {
                 base.OnBackPressed();
                 return;
             }
-            FragmentManager.PopBackStack();            
-        }
-    }
 
-   
+            GetExitPromptDialogBuilder((sender, args) =>
+            {
+                base.OnBackPressed();
+            }).Show();            
+        }
+
+        protected AlertDialog.Builder GetExitPromptDialogBuilder(EventHandler<DialogClickEventArgs> onOk, EventHandler<DialogClickEventArgs> onCancel = null )
+        {
+            onCancel = onCancel ?? ((sender, args) => { /*Nada*/ });
+
+            return new AlertDialog.Builder(this)
+                .SetMessage(this.GetString(ExitPromptMessageId))
+                .SetPositiveButton(YesId == 0  ? "Yes" : GetString(YesId), onOk)
+                .SetNegativeButton(NoId == 0 ? "No" : GetString(NoId), onCancel);
+        }
+        
+    }
 }

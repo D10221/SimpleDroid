@@ -14,4 +14,5 @@
   <string name="navigation_view_menu_application_section">Application</string>
   <string name="home">home</string>
   <string name="messages">messages</string>
+  <string name="exit_prompt_message">Exit?</string>
 </resources>
