@@ -28,14 +28,10 @@ namespace SimpleDroid
 
         public override void OnCreate(Bundle savedInstanceState)
         {
-            SetHasOptionsMenu(HasOptionsMenu);
+            SetHasOptionsMenu(true);
             base.OnCreate(savedInstanceState);
         }
-
-        protected abstract bool HasOptionsMenu { get; }
         
-        public virtual int ToolbarMenuLayout { get; } = 0;
-
         private readonly Subject<IEventArgs> _events = new Subject<IEventArgs>();
         private Injector _injector;
 
@@ -45,24 +41,21 @@ namespace SimpleDroid
         {
             _events.OnNext(new FragmentEventArgs(key, value));
         }
-        
+        public virtual int ToolbarMenuLayout { get; } = 0;
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
-            if (ToolbarMenuLayout > 0)
+            menu?.Clear();
+
+            if (ToolbarMenuLayout > 0 && menu != null)
             {
-                if (menu != null)
+                inflater.Inflate(ToolbarMenuLayout, menu);
+
+                OnMenuInflated(menu);
+
+                foreach(var item in menu.Items())
                 {
-                    menu.Clear();
-
-                    inflater.Inflate(ToolbarMenuLayout, menu);
-
-                    OnMenuInflated(menu);
-                }
-
-                for (var i = 0; i < menu.Size(); i++)
-                {
-                    menu.GetItem(i).SetOnMenuItemClickListener(this);
+                    item.SetOnMenuItemClickListener(this);
                 }
             }
 

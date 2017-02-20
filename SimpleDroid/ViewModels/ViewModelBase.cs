@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Android.Content;
 using NLog;
 
 namespace SimpleDroid
@@ -22,20 +21,35 @@ namespace SimpleDroid
         }
         public virtual void Dispose()
         {
-            foreach (var disposable in Disposables)
-            {
-                disposable.Dispose();
-            }
+           Disposables?.Dispose();
         }
 
         /// <summary>
         /// Called after this ViewModel is Injected/BuildUp by the Injector 
+        /// into a view 
         /// </summary>        
-        public virtual void BuildUp(ContextWrapper activity)
+        public virtual void OnBuiltUp(object view)
         {            
-            ViewContext = activity;
+            View = view;
         }
 
-        public ContextWrapper ViewContext { get; set; }
+        private object _view;
+
+        public object View
+        {
+            get { return _view; }
+            set
+            {
+                if (_view == value) return;
+                _view = value;
+                RaisePropertyChanged();
+                OnViewAttached(View);
+            }
+        }
+
+        protected virtual void OnViewAttached(object view)
+        {
+
+        }
     }
 }

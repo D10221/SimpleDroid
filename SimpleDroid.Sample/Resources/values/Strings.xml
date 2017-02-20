@@ -7,6 +7,11 @@
   <string name="navigation_header_view_bottom_line">Bottom line...</string>
   <string name="use_fingerprint_to_authenticate_key">use fingerprint to authenticate key</string>
   <string name="ToolbarTitle">Simple Droidt</string>
-  <string name="close_drawer">Close</string>
-  <string name="open_drawer">Open</string>
+  <string name="close_drawer">close</string>
+  <string name="open_drawer">open</string>
+  <string name="exit" >exit</string>
+  <string name="settings">settings</string>
+  <string name="navigation_view_menu_application_section">Application</string>
+  <string name="home">home</string>
+  <string name="messages">messages</string>
 </resources>

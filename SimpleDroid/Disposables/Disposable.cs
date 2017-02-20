@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SimpleDroid
 {
-    public interface IDisposer
+    public interface IDisposer : IDisposable
     {
         IList<IDisposable> Disposables { get; }
     }

@@ -75,7 +75,7 @@ namespace SimpleDroid
         {             
             if (_target is ContextWrapper)
             {
-                (resolve as ViewModelBase)?.BuildUp((ContextWrapper) _target);
+                (resolve as ViewModelBase)?.OnBuiltUp((ContextWrapper) _target);
             }
             return resolve;
         }

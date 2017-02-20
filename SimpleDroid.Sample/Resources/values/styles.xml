@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
 <resources>
   <style name="MyTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
     <item name="windowNoTitle">true</item>
@@ -8,6 +9,8 @@
     <item name="colorPrimaryDark">#1976D2</item>
     <item name="colorAccent">#0C92CF</item>
   </style>
-  <style name="MyTheme" parent="MyTheme.Base">
+  <style name="MyTheme" parent="MyTheme.Base"></style>
+  <style name="NavDrawerTextStyle" parent="Base.TextAppearance.AppCompat">
+    <item name="android:textAllCaps">true</item>
   </style>
 </resources>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
@@ -108,13 +109,17 @@ namespace SimpleDroid
                 CloseDrawerContentDescRes);
 
             Drawer.AddDrawerListener(drawerToggle);
-            Drawer.OnDrawerOpened().Subscribe(e =>
-            {
-                (e.Sender as DrawerLayout)?.BringToFront();
-            }).ToBeDisposedBy(this);
+            Drawer.OnDrawerOpened().Subscribe(OnDrawerOpened).ToBeDisposedBy(this);
 
             drawerToggle.SyncState();
             drawerToggle.ToBeDisposedBy(this);
+        }
+
+        private void OnDrawerOpened(EventPattern<DrawerLayout.DrawerOpenedEventArgs> e)
+        {
+            var drawerLayout = (e.Sender as DrawerLayout);
+            drawerLayout?.BringToFront();
+            RaiseEvent(drawerLayout);
         }
 
         protected virtual int ToolbarMenuLayout { get; private set; } = 0;
@@ -137,7 +142,7 @@ namespace SimpleDroid
 
                     OnMenuInflated(menu);
                 }
-            }
+            }          
         }
 
         protected virtual void OnMenuInflated(IMenu menu)
@@ -146,8 +151,6 @@ namespace SimpleDroid
         }
 
         public virtual int FragmentContainerID { get; } = 0;
-
-       
         public ViewState ViewState { get; private set; }
 
         private readonly Subject<IEventArgs> _events=  new Subject<IEventArgs>();

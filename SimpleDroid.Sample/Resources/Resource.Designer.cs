@@ -1840,58 +1840,82 @@ namespace SimpleDroid
 			public const int design_snackbar_background = 2130837580;
 			
 			// aapt resource value: 0x7f02004d
-			public const int ic_account_circle_white_24dp = 2130837581;
+			public const int ic_account_circle_black_24dp = 2130837581;
 			
 			// aapt resource value: 0x7f02004e
-			public const int ic_announcement_white_24dp = 2130837582;
+			public const int ic_account_circle_white_24dp = 2130837582;
 			
 			// aapt resource value: 0x7f02004f
-			public const int ic_arrow_back_white_24dp = 2130837583;
+			public const int ic_announcement_black_24dp = 2130837583;
 			
 			// aapt resource value: 0x7f020050
-			public const int ic_autorenew_white_24dp = 2130837584;
+			public const int ic_announcement_white_24dp = 2130837584;
 			
 			// aapt resource value: 0x7f020051
-			public const int ic_delete_white_24dp = 2130837585;
+			public const int ic_arrow_back_black_24dp = 2130837585;
 			
 			// aapt resource value: 0x7f020052
-			public const int ic_edit_white_24dp = 2130837586;
+			public const int ic_arrow_back_white_24dp = 2130837586;
 			
 			// aapt resource value: 0x7f020053
-			public const int ic_help_white_24dp = 2130837587;
+			public const int ic_autorenew_white_24dp = 2130837587;
 			
 			// aapt resource value: 0x7f020054
-			public const int ic_home_black_24dp = 2130837588;
+			public const int ic_delete_black_24dp = 2130837588;
 			
 			// aapt resource value: 0x7f020055
-			public const int ic_home_white_24dp = 2130837589;
+			public const int ic_delete_white_24dp = 2130837589;
 			
 			// aapt resource value: 0x7f020056
-			public const int ic_lightbulb_outline_white_24dp = 2130837590;
+			public const int ic_edit_white_24dp = 2130837590;
 			
 			// aapt resource value: 0x7f020057
-			public const int ic_more_vert_white_24dp = 2130837591;
+			public const int ic_exit_to_app_black_24dp = 2130837591;
 			
 			// aapt resource value: 0x7f020058
-			public const int ic_note_add_white_24dp = 2130837592;
+			public const int ic_exit_to_app_white_24dp = 2130837592;
 			
 			// aapt resource value: 0x7f020059
-			public const int ic_save_white_24dp = 2130837593;
+			public const int ic_help_white_24dp = 2130837593;
 			
 			// aapt resource value: 0x7f02005a
-			public const int ic_settings_white_24dp = 2130837594;
+			public const int ic_home_black_24dp = 2130837594;
 			
 			// aapt resource value: 0x7f02005b
-			public const int Icon = 2130837595;
+			public const int ic_home_white_24dp = 2130837595;
 			
 			// aapt resource value: 0x7f02005c
-			public const int imgBg = 2130837596;
+			public const int ic_lightbulb_outline_white_24dp = 2130837596;
 			
 			// aapt resource value: 0x7f02005d
-			public const int navigation_view_header_background = 2130837597;
+			public const int ic_more_vert_white_24dp = 2130837597;
 			
 			// aapt resource value: 0x7f02005e
-			public const int notification_template_icon_bg = 2130837598;
+			public const int ic_note_add_white_24dp = 2130837598;
+			
+			// aapt resource value: 0x7f02005f
+			public const int ic_save_black_24dp = 2130837599;
+			
+			// aapt resource value: 0x7f020060
+			public const int ic_save_white_24dp = 2130837600;
+			
+			// aapt resource value: 0x7f020061
+			public const int ic_settings_black_24dp = 2130837601;
+			
+			// aapt resource value: 0x7f020062
+			public const int ic_settings_white_24dp = 2130837602;
+			
+			// aapt resource value: 0x7f020063
+			public const int Icon = 2130837603;
+			
+			// aapt resource value: 0x7f020064
+			public const int imgBg = 2130837604;
+			
+			// aapt resource value: 0x7f020065
+			public const int navigation_view_header_background = 2130837605;
+			
+			// aapt resource value: 0x7f020066
+			public const int notification_template_icon_bg = 2130837606;
 			
 			static Drawable()
 			{
@@ -1912,8 +1936,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060074
 			public const int abc = 2131099764;
 			
-			// aapt resource value: 0x7f06007b
-			public const int action0 = 2131099771;
+			// aapt resource value: 0x7f06007d
+			public const int action0 = 2131099773;
 			
 			// aapt resource value: 0x7f060072
 			public const int action_attach = 2131099762;
@@ -1942,8 +1966,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f06005b
 			public const int action_context_bar = 2131099739;
 			
-			// aapt resource value: 0x7f06007f
-			public const int action_divider = 2131099775;
+			// aapt resource value: 0x7f060081
+			public const int action_divider = 2131099777;
 			
 			// aapt resource value: 0x7f060003
 			public const int action_menu_divider = 2131099651;
@@ -1981,8 +2005,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060044
 			public const int buttonPanel = 2131099716;
 			
-			// aapt resource value: 0x7f06007c
-			public const int cancel_action = 2131099772;
+			// aapt resource value: 0x7f06007e
+			public const int cancel_action = 2131099774;
 			
 			// aapt resource value: 0x7f06002b
 			public const int center = 2131099691;
@@ -1996,8 +2020,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060052
 			public const int checkbox = 2131099730;
 			
-			// aapt resource value: 0x7f060082
-			public const int chronometer = 2131099778;
+			// aapt resource value: 0x7f060084
+			public const int chronometer = 2131099780;
 			
 			// aapt resource value: 0x7f060033
 			public const int clip_horizontal = 2131099699;
@@ -2047,8 +2071,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f06001c
 			public const int end = 2131099676;
 			
-			// aapt resource value: 0x7f060087
-			public const int end_padder = 2131099783;
+			// aapt resource value: 0x7f060089
+			public const int end_padder = 2131099785;
 			
 			// aapt resource value: 0x7f060023
 			public const int enterAlways = 2131099683;
@@ -2098,8 +2122,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060078
 			public const int imageView = 2131099768;
 			
-			// aapt resource value: 0x7f060086
-			public const int info = 2131099782;
+			// aapt resource value: 0x7f060088
+			public const int info = 2131099784;
 			
 			// aapt resource value: 0x7f060000
 			public const int item_touch_helper_previous_elevation = 2131099648;
@@ -2107,11 +2131,11 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f06002f
 			public const int left = 2131099695;
 			
-			// aapt resource value: 0x7f060080
-			public const int line1 = 2131099776;
+			// aapt resource value: 0x7f060082
+			public const int line1 = 2131099778;
 			
-			// aapt resource value: 0x7f060084
-			public const int line3 = 2131099780;
+			// aapt resource value: 0x7f060086
+			public const int line3 = 2131099782;
 			
 			// aapt resource value: 0x7f06000b
 			public const int listMode = 2131099659;
@@ -2119,11 +2143,11 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060041
 			public const int list_item = 2131099713;
 			
-			// aapt resource value: 0x7f06007e
-			public const int media_actions = 2131099774;
+			// aapt resource value: 0x7f060080
+			public const int media_actions = 2131099776;
 			
-			// aapt resource value: 0x7f060089
-			public const int menu_back = 2131099785;
+			// aapt resource value: 0x7f06008b
+			public const int menu_back = 2131099787;
 			
 			// aapt resource value: 0x7f06001d
 			public const int middle = 2131099677;
@@ -2134,11 +2158,17 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060016
 			public const int multiply = 2131099670;
 			
+			// aapt resource value: 0x7f06007c
+			public const int nav_exit = 2131099772;
+			
 			// aapt resource value: 0x7f060079
 			public const int nav_home = 2131099769;
 			
 			// aapt resource value: 0x7f06007a
 			public const int nav_messages = 2131099770;
+			
+			// aapt resource value: 0x7f06007b
+			public const int nav_settings = 2131099771;
 			
 			// aapt resource value: 0x7f06006d
 			public const int navigation_header_container = 2131099757;
@@ -2266,8 +2296,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060031
 			public const int start = 2131099697;
 			
-			// aapt resource value: 0x7f06007d
-			public const int status_bar_latest_event_content = 2131099773;
+			// aapt resource value: 0x7f06007f
+			public const int status_bar_latest_event_content = 2131099775;
 			
 			// aapt resource value: 0x7f060065
 			public const int submit_area = 2131099749;
@@ -2275,17 +2305,17 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f06000d
 			public const int tabMode = 2131099661;
 			
-			// aapt resource value: 0x7f060085
-			public const int text = 2131099781;
+			// aapt resource value: 0x7f060087
+			public const int text = 2131099783;
 			
-			// aapt resource value: 0x7f060083
-			public const int text2 = 2131099779;
+			// aapt resource value: 0x7f060085
+			public const int text2 = 2131099781;
 			
 			// aapt resource value: 0x7f06004d
 			public const int textSpacerNoButtons = 2131099725;
 			
-			// aapt resource value: 0x7f060081
-			public const int time = 2131099777;
+			// aapt resource value: 0x7f060083
+			public const int time = 2131099779;
 			
 			// aapt resource value: 0x7f060043
 			public const int title = 2131099715;
@@ -2293,8 +2323,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060048
 			public const int title_template = 2131099720;
 			
-			// aapt resource value: 0x7f060088
-			public const int toolbar = 2131099784;
+			// aapt resource value: 0x7f06008a
+			public const int toolbar = 2131099786;
 			
 			// aapt resource value: 0x7f060032
 			public const int top = 2131099698;
@@ -2536,16 +2566,19 @@ namespace SimpleDroid
 			public const int select_dialog_singlechoice_material = 2130903095;
 			
 			// aapt resource value: 0x7f030038
-			public const int support_simple_spinner_dropdown_item = 2130903096;
+			public const int settings_view = 2130903096;
 			
 			// aapt resource value: 0x7f030039
-			public const int toolbar = 2130903097;
+			public const int support_simple_spinner_dropdown_item = 2130903097;
 			
 			// aapt resource value: 0x7f03003a
-			public const int toolbar_menu = 2130903098;
+			public const int toolbar = 2130903098;
 			
 			// aapt resource value: 0x7f03003b
-			public const int toolbar_settings = 2130903099;
+			public const int toolbar_menu = 2130903099;
+			
+			// aapt resource value: 0x7f03003c
+			public const int toolbar_settings = 2130903100;
 			
 			static Layout()
 			{
@@ -2638,14 +2671,29 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f07001d
 			public const int close_drawer = 2131165213;
 			
+			// aapt resource value: 0x7f07001f
+			public const int exit = 2131165215;
+			
+			// aapt resource value: 0x7f070022
+			public const int home = 2131165218;
+			
+			// aapt resource value: 0x7f070023
+			public const int messages = 2131165219;
+			
 			// aapt resource value: 0x7f07001a
 			public const int navigation_header_view_bottom_line = 2131165210;
 			
 			// aapt resource value: 0x7f070019
 			public const int navigation_header_view_brand = 2131165209;
 			
+			// aapt resource value: 0x7f070021
+			public const int navigation_view_menu_application_section = 2131165217;
+			
 			// aapt resource value: 0x7f07001e
 			public const int open_drawer = 2131165214;
+			
+			// aapt resource value: 0x7f070020
+			public const int settings = 2131165216;
 			
 			// aapt resource value: 0x7f070013
 			public const int status_bar_notification_info_overflow = 2131165203;
@@ -3115,6 +3163,9 @@ namespace SimpleDroid
 			
 			// aapt resource value: 0x7f090157
 			public const int MyTheme_Base = 2131296599;
+			
+			// aapt resource value: 0x7f090159
+			public const int NavDrawerTextStyle = 2131296601;
 			
 			// aapt resource value: 0x7f090017
 			public const int Platform_AppCompat = 2131296279;

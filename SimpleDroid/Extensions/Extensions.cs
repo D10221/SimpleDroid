@@ -1,6 +1,4 @@
 ﻿using System;
-using Android.Content;
-using Android.Widget;
 
 namespace SimpleDroid
 {
@@ -10,22 +8,6 @@ namespace SimpleDroid
         {
             action.Invoke(source);
             return source;
-        }
-    }
-
-    public static class TextViewExtension
-    {
-        public static void AddText(this TextView textView, string text)
-        {
-            textView.Text += text;
-        }
-    }
-
-    public static class ApplicationContextExtensions
-    {
-        public static T GetSystemService<T>(this Context context, string serviceName) where T :Java.Lang.Object
-        {
-            return (T) context.GetSystemService(serviceName);
         }
     }
 }
