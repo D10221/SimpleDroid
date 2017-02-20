@@ -9,29 +9,38 @@
     <Import_RootNamespace>SimpleDroid</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ActivityBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ActivityEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Activities\AppCompatActivityBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Activities\Navigator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Application\DroidApp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Db\DatabaseFty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Db\DbExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Db\EnityBaseExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Db\EntityBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Db\IDatabase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Db\IDatabaseFty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Disposables\Disposable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Disposables\DisposableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConvertExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DatabaseFty.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DbExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Disposable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)EnityBaseExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)EntityBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FragmentBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HaveDisposablesExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IActivityViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IDatabase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IDatabaseFty.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IHaveDisposables.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IFragmentFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\EventsExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\IEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\IHaveEvents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IntentExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fragments\IFragmentFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyAndroidRxExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProperyChangedExtension.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TinyBinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\InjectAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\Injector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\ITinyIocBootstraper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\TinyIoC.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\IActivityViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ProperyChangedExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TinyBinder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Views\" />
   </ItemGroup>
 </Project>

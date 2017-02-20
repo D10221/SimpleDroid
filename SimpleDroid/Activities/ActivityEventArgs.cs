@@ -1,15 +1,13 @@
 namespace SimpleDroid
 {
-    public class ActivityEventArgs
+    public class ActivityEventArgs: IEventArgs
     {
-        public ActivityEventArgs(object sender, string key, object value = null)
+        public ActivityEventArgs(string key, object value = null)
         {
-            Sender = sender;
             Key = key;
             Value = value;
         }
 
-        public object Sender { get; }
         public string Key { get; }
 
         public object Value { get; }
