@@ -988,32 +988,32 @@ namespace SimpleDroid
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f0b004a
-			public const int abc_background_cache_hint_selector_material_dark = 2131427402;
-			
-			// aapt resource value: 0x7f0b004b
-			public const int abc_background_cache_hint_selector_material_light = 2131427403;
-			
 			// aapt resource value: 0x7f0b004c
-			public const int abc_color_highlight_material = 2131427404;
+			public const int abc_background_cache_hint_selector_material_dark = 2131427404;
+			
+			// aapt resource value: 0x7f0b004d
+			public const int abc_background_cache_hint_selector_material_light = 2131427405;
+			
+			// aapt resource value: 0x7f0b004e
+			public const int abc_color_highlight_material = 2131427406;
 			
 			// aapt resource value: 0x7f0b0000
 			public const int abc_input_method_navigation_guard = 2131427328;
 			
-			// aapt resource value: 0x7f0b004d
-			public const int abc_primary_text_disable_only_material_dark = 2131427405;
-			
-			// aapt resource value: 0x7f0b004e
-			public const int abc_primary_text_disable_only_material_light = 2131427406;
-			
 			// aapt resource value: 0x7f0b004f
-			public const int abc_primary_text_material_dark = 2131427407;
+			public const int abc_primary_text_disable_only_material_dark = 2131427407;
 			
 			// aapt resource value: 0x7f0b0050
-			public const int abc_primary_text_material_light = 2131427408;
+			public const int abc_primary_text_disable_only_material_light = 2131427408;
 			
 			// aapt resource value: 0x7f0b0051
-			public const int abc_search_url_text = 2131427409;
+			public const int abc_primary_text_material_dark = 2131427409;
+			
+			// aapt resource value: 0x7f0b0052
+			public const int abc_primary_text_material_light = 2131427410;
+			
+			// aapt resource value: 0x7f0b0053
+			public const int abc_search_url_text = 2131427411;
 			
 			// aapt resource value: 0x7f0b0001
 			public const int abc_search_url_text_normal = 2131427329;
@@ -1024,11 +1024,11 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f0b0003
 			public const int abc_search_url_text_selected = 2131427331;
 			
-			// aapt resource value: 0x7f0b0052
-			public const int abc_secondary_text_material_dark = 2131427410;
+			// aapt resource value: 0x7f0b0054
+			public const int abc_secondary_text_material_dark = 2131427412;
 			
-			// aapt resource value: 0x7f0b0053
-			public const int abc_secondary_text_material_light = 2131427411;
+			// aapt resource value: 0x7f0b0055
+			public const int abc_secondary_text_material_light = 2131427413;
 			
 			// aapt resource value: 0x7f0b0004
 			public const int accent_material_dark = 2131427332;
@@ -1072,20 +1072,23 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f0b0011
 			public const int button_material_light = 2131427345;
 			
-			// aapt resource value: 0x7f0b0048
-			public const int colorAccent = 2131427400;
+			// aapt resource value: 0x7f0b0049
+			public const int colorAccent = 2131427401;
 			
-			// aapt resource value: 0x7f0b0046
-			public const int colorPrimary = 2131427398;
+			// aapt resource value: 0x7f0b0048
+			public const int colorControlNormal = 2131427400;
+			
+			// aapt resource value: 0x7f0b0044
+			public const int colorPrimary = 2131427396;
 			
 			// aapt resource value: 0x7f0b0047
 			public const int colorPrimaryDark = 2131427399;
 			
-			// aapt resource value: 0x7f0b0044
-			public const int colorPrimaryLight = 2131427396;
-			
 			// aapt resource value: 0x7f0b0045
-			public const int colorPrimaryMid = 2131427397;
+			public const int colorPrimaryLight = 2131427397;
+			
+			// aapt resource value: 0x7f0b0046
+			public const int colorPrimaryMid = 2131427398;
 			
 			// aapt resource value: 0x7f0b003a
 			public const int design_fab_shadow_end_color = 2131427386;
@@ -1225,17 +1228,20 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f0b0035
 			public const int secondary_text_disabled_material_light = 2131427381;
 			
+			// aapt resource value: 0x7f0b004b
+			public const int splash_background = 2131427403;
+			
 			// aapt resource value: 0x7f0b0036
 			public const int switch_thumb_disabled_material_dark = 2131427382;
 			
 			// aapt resource value: 0x7f0b0037
 			public const int switch_thumb_disabled_material_light = 2131427383;
 			
-			// aapt resource value: 0x7f0b0054
-			public const int switch_thumb_material_dark = 2131427412;
+			// aapt resource value: 0x7f0b0056
+			public const int switch_thumb_material_dark = 2131427414;
 			
-			// aapt resource value: 0x7f0b0055
-			public const int switch_thumb_material_light = 2131427413;
+			// aapt resource value: 0x7f0b0057
+			public const int switch_thumb_material_light = 2131427415;
 			
 			// aapt resource value: 0x7f0b0038
 			public const int switch_thumb_normal_material_dark = 2131427384;
@@ -1243,8 +1249,8 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f0b0039
 			public const int switch_thumb_normal_material_light = 2131427385;
 			
-			// aapt resource value: 0x7f0b0049
-			public const int white = 2131427401;
+			// aapt resource value: 0x7f0b004a
+			public const int white = 2131427402;
 			
 			static Color()
 			{
@@ -1909,13 +1915,22 @@ namespace SimpleDroid
 			public const int Icon = 2130837603;
 			
 			// aapt resource value: 0x7f020064
-			public const int imgBg = 2130837604;
+			public const int icon_42 = 2130837604;
 			
 			// aapt resource value: 0x7f020065
-			public const int navigation_view_header_background = 2130837605;
+			public const int icon_bow = 2130837605;
 			
 			// aapt resource value: 0x7f020066
-			public const int notification_template_icon_bg = 2130837606;
+			public const int icon_bow_42 = 2130837606;
+			
+			// aapt resource value: 0x7f020067
+			public const int navigation_view_header_background = 2130837607;
+			
+			// aapt resource value: 0x7f020069
+			public const int notification_template_icon_bg = 2130837609;
+			
+			// aapt resource value: 0x7f020068
+			public const int splash_screen = 2130837608;
 			
 			static Drawable()
 			{
@@ -3163,6 +3178,9 @@ namespace SimpleDroid
 			
 			// aapt resource value: 0x7f090157
 			public const int MyTheme_Base = 2131296599;
+			
+			// aapt resource value: 0x7f09015a
+			public const int MyTheme_Splash = 2131296602;
 			
 			// aapt resource value: 0x7f090159
 			public const int NavDrawerTextStyle = 2131296601;

@@ -4,13 +4,21 @@
   <style name="MyTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
     <item name="windowNoTitle">true</item>
     <item name="windowActionBar">false</item>
-    <item name="colorControlNormal">#0C92CF</item>
-    <item name="colorPrimary">#2196F3</item>
-    <item name="colorPrimaryDark">#1976D2</item>
+    <item name="colorControlNormal">@color/colorControlNormal</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">#0C92CF</item>
   </style>
+  
   <style name="MyTheme" parent="MyTheme.Base"></style>
+  
   <style name="NavDrawerTextStyle" parent="Base.TextAppearance.AppCompat">
     <item name="android:textAllCaps">true</item>
   </style>
+
+  <style name="MyTheme.Splash" parent ="Theme.AppCompat.Light">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+    <item name="android:windowNoTitle">true</item>
+  </style>
+  
 </resources>

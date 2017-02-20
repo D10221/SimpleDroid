@@ -7,7 +7,11 @@ using TinyIoC;
 
 namespace SimpleDroid
 {    
-    [Activity(Label = "SimpleDroid", MainLauncher = true, Theme = "@style/MyTheme", Icon = "@drawable/icon")]
+    [Activity(
+        Label = "@string/ApplicationName", 
+        // MainLauncher = true, 
+        Theme = "@style/MyTheme",
+        Icon = "@drawable/icon")]
     public class MainActivity : AppCompatActivityBase
     {
         #region backing fields
