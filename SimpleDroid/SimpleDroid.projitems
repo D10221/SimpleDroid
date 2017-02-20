@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Activities\AppCompatActivityBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Activities\Navigator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DroidApp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\DatabaseFty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\DbExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\EnityBaseExtensions.cs" />
@@ -32,18 +33,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\MenuExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextViewExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\IFragmentFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyAndroidRxExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\InjectAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\Injector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\ITinyIocBootstraper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\TinyIoC.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\IActivityViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\IViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ProperyChangedExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TinyBinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Views\" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\IView.cs" />
   </ItemGroup>
 </Project>

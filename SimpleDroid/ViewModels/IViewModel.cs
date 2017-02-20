@@ -2,7 +2,7 @@
 
 namespace SimpleDroid
 {
-    internal interface IActivityViewModel: INotifyPropertyChanged
+    internal interface IViewModel: INotifyPropertyChanged
     {
 
     }

@@ -6,7 +6,7 @@ using NLog;
 
 namespace SimpleDroid
 {
-    public class ViewModelBase: IActivityViewModel, IDisposer
+    public class ViewModelBase: IViewModel, IDisposer
     {
         private Logger _logger;
         protected Logger Logger => _logger ?? (_logger = LogManager.GetCurrentClassLogger());
@@ -30,26 +30,7 @@ namespace SimpleDroid
         /// </summary>        
         public virtual void OnBuiltUp(object view)
         {            
-            View = view;
-        }
-
-        private object _view;
-
-        public object View
-        {
-            get { return _view; }
-            set
-            {
-                if (_view == value) return;
-                _view = value;
-                RaisePropertyChanged();
-                OnViewAttached(View);
-            }
-        }
-
-        protected virtual void OnViewAttached(object view)
-        {
-
-        }
+            // ... 
+        }        
     }
 }

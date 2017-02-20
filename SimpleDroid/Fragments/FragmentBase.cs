@@ -10,19 +10,7 @@ using TinyIoC;
 
 namespace SimpleDroid
 {
-    public class FragmentEventArgs: IEventArgs
-    {
-        public FragmentEventArgs(string key, object value = null)
-        {
-            Key = key;
-            Value = value;
-        }
-
-        public string Key { get; }
-        public object Value { get; }
-    }
-
-    public abstract class FragmentBase : Fragment, IMenuItemOnMenuItemClickListener, IDisposer, IHaveEvents
+    public abstract class FragmentBase : Fragment, IView, IMenuItemOnMenuItemClickListener, IDisposer
     {
         protected abstract int FragmentLayout { get; }
 
@@ -33,8 +21,7 @@ namespace SimpleDroid
         }
         
         private readonly Subject<IEventArgs> _events = new Subject<IEventArgs>();
-        private Injector _injector;
-
+        
         public IObservable<IEventArgs> Events => _events.AsObservable();
 
         protected void RaiseEvent(object value = null , [CallerMemberName] string key = null)
@@ -62,26 +49,26 @@ namespace SimpleDroid
             base.OnCreateOptionsMenu(menu, inflater);
         }
 
-        public bool OnMenuItemClick(IMenuItem item)
+        public virtual bool OnMenuItemClick(IMenuItem item)
         {
             RaiseEvent(item);
             return true;
         }
 
+        public virtual IMenu Menu { get; set; }
+
         protected virtual void OnMenuInflated(IMenu menu)
         {
-            //menu.FindItem(Resource.Id.action_refresh).SetVisible(true);
-            //menu.FindItem(Resource.Id.action_attach).SetVisible(false);
+            Menu = menu;
         }
 
         private TinyIoCContainer Container => TinyIoCContainer.Current;
+
+        private Injector _injector;
         private Injector Injector => _injector ?? (_injector = new Injector(Container, this));
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-        {
-            // Use this to return your custom view for this Fragment
-            // return inflater.Inflate(Resource.Layout.YourFragment, container, false);
-            var view = inflater.Inflate(FragmentLayout, container, false);
-            // base.OnCreateView(inflater.Inflate(Resource.Layout.homeLayout, container, savedInstanceState)    
+        {            
+            var view = inflater.Inflate(FragmentLayout, container, false);            
             Injector.BuildUp();        
             RaiseEvent(view);
             return view;
