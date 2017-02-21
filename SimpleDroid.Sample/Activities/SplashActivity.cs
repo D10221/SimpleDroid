@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Android.App;
@@ -29,10 +30,10 @@ namespace SimpleDroid
                 return;
             }
 
-            view.SetBackgroundResource(Resource.Drawable.splash_screen_a);
+            view.SetBackgroundResource(Resource.Drawable.splash_screen);
 
-            this._animation = (view.Background as AnimationDrawable);
-
+            var layerDrawable = (view.Background as LayerDrawable);
+            this._animation = layerDrawable.Drawables().FirstOrDefault(x=>x.GetType() == typeof(AnimationDrawable)) as AnimationDrawable;
             if (_animation == null)
             {
                 Log( $"Window.DecorView.RootView.Background as AnimationDrawable is NotFound");

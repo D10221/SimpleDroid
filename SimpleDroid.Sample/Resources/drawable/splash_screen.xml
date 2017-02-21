@@ -1,12 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<animation-list   
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:oneshot="false"
-  android:visible="false">    
-  <item
-    android:drawable="@drawable/icon_bow"
-    android:duration="300" />
-  <item
-      android:drawable="@drawable/icon_bow_42"
-      android:duration="300" />
-</animation-list>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <color android:color="@android:color/transparent"/>
+  </item>
+  <item>
+    <animation-list
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:oneshot="false"
+      android:visible="false">
+      <item
+        android:drawable="@drawable/icon_bow"
+        android:duration="300" />
+      <item
+          android:drawable="@drawable/icon_bow_42"
+          android:duration="300" />
+    </animation-list>
+  </item>
+</layer-list>

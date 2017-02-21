@@ -1930,7 +1930,7 @@ namespace SimpleDroid
 			public const int notification_template_icon_bg = 2130837609;
 			
 			// aapt resource value: 0x7f020068
-			public const int splash_screen_a = 2130837608;
+			public const int splash_screen = 2130837608;
 			
 			static Drawable()
 			{
