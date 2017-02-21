@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Events\EventsExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\IEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\IHaveEvents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\AnimationDrawableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ApplicationContextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IntentExtensions.cs" />

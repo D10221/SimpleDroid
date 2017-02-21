@@ -526,9 +526,6 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\ic_delete_black_24dp.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\splash_screen.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_42.png" />
   </ItemGroup>
   <ItemGroup>
@@ -536,6 +533,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_bow_42.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splash_screen_a.xml" />
   </ItemGroup>
   <Import Project="..\SimpleDroid\SimpleDroid.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
