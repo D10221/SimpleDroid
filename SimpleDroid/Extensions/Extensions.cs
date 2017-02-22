@@ -1,4 +1,5 @@
 ﻿using System;
+using Android.App;
 
 namespace SimpleDroid
 {
@@ -8,6 +9,17 @@ namespace SimpleDroid
         {
             action.Invoke(source);
             return source;
+        }
+    }
+
+    public static class FragmentManagerExtensions
+    {
+        public static void ClearBackStack(this FragmentManager manager)
+        {
+            for (var i = 0; i < manager.BackStackEntryCount; i++)
+            {
+                manager.PopBackStack();
+            }
         }
     }
 }

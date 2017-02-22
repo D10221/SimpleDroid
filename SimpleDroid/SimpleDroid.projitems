@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Db\EntityBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\IDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\IDatabaseFty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\Dialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Disposables\Disposable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Disposables\DisposableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConvertExtensions.cs" />

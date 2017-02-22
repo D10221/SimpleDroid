@@ -2731,6 +2731,9 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f07001e
 			public const int open_drawer = 2131165214;
 			
+			// aapt resource value: 0x7f070028
+			public const int press_back_again_to_exit = 2131165224;
+			
 			// aapt resource value: 0x7f070020
 			public const int settings = 2131165216;
 			

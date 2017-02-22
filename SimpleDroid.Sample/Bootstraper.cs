@@ -1,6 +1,7 @@
 using System;
 using Android.App;
 using SimpleDroid.Db;
+using SimpleDroid.Dialogs;
 using TinyIoC;
 
 namespace SimpleDroid
@@ -16,6 +17,9 @@ namespace SimpleDroid
             container.Register<Fragment, Views.HomeView>(Resource.Id.nav_home.ToString());
             container.Register<Fragment, Views.MessagesView>(Resource.Id.nav_messages.ToString());
             container.Register<Fragment, Views.SettingsView>(Resource.Id.nav_settings.ToString());
+
+            //Dialogs 
+            container.Register<IDialog, ExitDialog>(nameof(ExitDialog));
 
             IDatabase db = null;
             Func<TinyIoCContainer, NamedParameterOverloads, IDatabase> database =

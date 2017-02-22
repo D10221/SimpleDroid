@@ -5,14 +5,13 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Android.Content;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Java.Lang;
 using NLog;
 using TinyIoC;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
@@ -82,6 +81,8 @@ namespace SimpleDroid
             SetContentView(ActivityLayout);
             Injector.BuildUp();
 
+            ExitOnDoubleBackPressed().ToBeDisposedBy(this);
+
             if (Toolbar == null) return;
 
             SetSupportActionBar(Toolbar);
@@ -101,6 +102,71 @@ namespace SimpleDroid
             DrawerSetup();
         }
 
+        /// <summary>
+        /// Text from String's
+        /// </summary>
+        protected virtual int PressBackAgainToExit { get; } = 0;
+
+        protected virtual int DoubleBackPressedWaitingWindow { get; } = 2000;
+
+        /// <summary>
+        /// If Selected NO && DontAskAgain with the DIalog we Can't exit with the back button 
+        /// Then We can wait for Double Tap to exit         
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IDisposable ExitOnDoubleBackPressed()
+        {
+            var showing = false;
+
+            var backPressed = Events
+                .Where(e => e.Key == nameof(OnBackPressed))                
+                .Where(x => FragmentManager.BackStackEntryCount == 0
+                && ExitDialog?.LastResult != null
+                && ExitDialog.LastResult.DontAskAgain
+                && !ExitDialog.LastResult.Ok )
+                .Select(x=> showing)
+                .Timestamp();
+            
+            return 
+                backPressed
+                .Do(x => LogIt($"Back Pressed: {x}"))
+                .Where(x=> !x.Value)                   
+                .Subscribe( async x =>
+                {
+                    showing = true;
+                    LogIt($"Showing: {showing}");
+
+                    
+                    var exit = backPressed
+                        .Take(1)
+                        .Timeout(TimeSpan.FromMilliseconds(DoubleBackPressedWaitingWindow))
+                        .Subscribe(e =>
+                            RunOnUiThread(() =>{
+                                LogIt($"Exiting");
+                                OnBackPressed(exit: true);                                
+                            }),
+                            error => LogIt(error.Message)
+                        );
+
+                    RunOnUiThread(() =>
+                    {
+                        var makeText = Toast.MakeText(
+                            App.Current, PressBackAgainToExit, ToastLength.Short
+                        );                        
+                        makeText.Show();                        
+                    });
+
+                    await Task.Delay(DoubleBackPressedWaitingWindow);
+                    exit.Dispose();                    
+                    showing = false;
+                    LogIt($"Showing: {showing}");
+                });
+        }
+
+        protected virtual void LogIt(string message , [CallerMemberName] string callerName = null)
+        {
+            Log.Debug(nameof(AppCompatActivityBase), $"{callerName}: {message}");
+        }
         protected virtual int OpenDrawerContentDescRes { get; } = 0;
         protected virtual int CloseDrawerContentDescRes { get; } = 0;
 
@@ -225,79 +291,69 @@ namespace SimpleDroid
             _events.OnNext(new ActivityEventArgs(callerName, value));
         }
 
-        protected virtual DialogFty DialogFty { get; }
+        protected virtual IDialog ExitDialog { get; } = null;
+
+        protected virtual async void Exit()
+        {
+            if (ExitDialog == null)
+            {
+                OnBackPressed(true);
+                return;
+            }
+
+            var result = await ExitDialog.Show(this);
+
+            // Save it somewhere 
+            Logger.Info($"DontAskAgain: {result.DontAskAgain}");
+
+            if (result.Ok)
+            {
+                OnBackPressed(true);
+            }
+        }
+
         /// <summary>
         /// Don't exit on OnBackPressed
         /// </summary>
         public override void OnBackPressed()
         {
-            if (FragmentManager.BackStackEntryCount > 0)
+            RaiseEvent();
+            OnBackPressed(false);
+        }
+
+        protected virtual void OnBackPressed(bool exit)
+        {
+            if (exit)
             {
-                FragmentManager.PopBackStack();
+                FragmentManager.ClearBackStack();
+                base.OnBackPressed();
                 return;
             }
 
-            if (DialogFty == null)
+            if (FragmentManager.BackStackEntryCount > 0)
+            {
+                FragmentManager.PopBackStack();
+                base.OnBackPressed();
+                return;
+            }
+
+            if (ExitDialog == null)
             {
                 base.OnBackPressed();
                 return;
             }
 
-            DialogFty.Show(this, this.LayoutInflater);
-        }
 
-      
-    }
-
-    public class DialogFty
-    {
-        public DialogFty(int dialogLayout,int yes, int no,  int dontAskAgain)
-        {
-            Yes = yes;
-            No = no;
-            DialogLayout = dialogLayout;
-            DontAskAgain = dontAskAgain;            
-        }
-
-        protected virtual int Yes { get; } 
-        protected virtual int No { get; } 
-        protected virtual int DialogLayout { get; } 
-        private int DontAskAgain { get; }        
-        public Task<IDictionary<int, object>> Show(
-            Context context, 
-            LayoutInflater inflater)
-        {
-            var result = new DialogResult();
-
-            using (var view = inflater.Inflate(DialogLayout, null))
+            Action maybeExit = async () =>
             {
-                var checkBox = view.FindViewById<CheckBox>(DontAskAgain);                
-                
-                Func<int, EventHandler<DialogClickEventArgs>> onClose =
-                    yes => (sender, args) =>
-                    {                        
-                        result.SetResult(new Dictionary<int, object>
-                        {
-                            { Yes, yes == Yes},
-                            {DontAskAgain, checkBox.Checked }
-                        });
-                    };
-
-                using (var builder = new AlertDialog.Builder(context)
-                    .SetPositiveButton(context.GetString(Yes), onClose(Yes))
-                    .SetNegativeButton(context.GetString(No), onClose(No))
-                    .SetView(view))
+                var result = await ExitDialog.Show(this);
+                if (result.Ok)
                 {
-                    // ...
-                    builder.Show();
+                    base.OnBackPressed();
                 }
-            }
-            return result.Task;
-        }
-    }
+            };
 
-    class DialogResult : TaskCompletionSource<IDictionary<int, object>>
-    {
-        
+            maybeExit();
+        }
     }
 }

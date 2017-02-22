@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Reactive.Linq;
 using Android.App;
-using Android.Content;
 using Android.OS;
 using Android.Views;
-using Android.Widget;
+using SimpleDroid.Extensionsss;
 using TinyIoC;
 
 namespace SimpleDroid
@@ -43,9 +42,12 @@ namespace SimpleDroid
             }            
         }
 
+        protected override int PressBackAgainToExit { get; } = Resource.String.press_back_again_to_exit;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
 
             this.When(nameof(base.OnNavigationItemSelected))
                 .Select(e => (e.Value as IMenuItem)?.ItemId ?? 0 )
@@ -58,39 +60,31 @@ namespace SimpleDroid
             this.When(nameof(base.OnNavigationItemSelected))
                 .Select(e => (e.Value as IMenuItem)?.ItemId ?? 0 )
                 .Where(itemId => itemId ==  Resource.Id.nav_exit)                        
-                .Subscribe(Exit)
+                .Subscribe(i=> Exit())
                 .ToBeDisposedBy(this);
         }
 
-        protected virtual DialogFty DialogFty { get; private set; }
-        async void Exit(int itemId)
+        private IDialog _exitDialog;
+
+        protected override IDialog ExitDialog
         {
-            if (itemId != Resource.Id.nav_exit) return;
-            
-            DialogFty = new DialogFty(
-                Resource.Layout.exit_prompt_dialog,
-                Resource.String.yes, 
-                Resource.String.no,                 
-                Resource.Id.exit_prompt_dontaskagain
-                );
-
-            var result = await DialogFty.Show(this, this.LayoutInflater);
-
-            if (result[Resource.Id.exit_prompt_dontaskagain] as bool? ?? false)
+            get
             {
-                Logger.Info("DontAskAgin");
-            }
-            if (result[Resource.String.yes] as bool? ?? false)
-            {
-                Logger.Info("Ok");
+                if (_exitDialog != null) return _exitDialog;
+                _exitDialog = Container.ResolveMe<IDialog>();
+                return _exitDialog;
             }
         }
         
+
         void Navigate(int itemId)
         {
             if (itemId == Resource.Id.nav_exit) return;
             Navigator.Navigate(itemId);
         }
-    }
+
+    }    
+
+   
 }
 
