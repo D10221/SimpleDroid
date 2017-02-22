@@ -1,3 +1,4 @@
+
 namespace SimpleDroid.Views
 {
     public class HomeView : FragmentBase

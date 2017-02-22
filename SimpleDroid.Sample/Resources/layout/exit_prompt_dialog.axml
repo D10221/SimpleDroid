@@ -3,15 +3,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView 
-        android:id="@+id/exit_propmt_text"        
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <CheckBox
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/exit_prompt_dontaskagain"    
-        android:text="@string/dont_ask_again"
-        android:gravity="center"        
-        />
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dont_ask_again"
+            android:paddingRight="15dp"
+            android:id="@+id/textView1" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/exit_prompt_dontaskagain"
+            android:gravity="right" />
+    </LinearLayout>
 </LinearLayout>

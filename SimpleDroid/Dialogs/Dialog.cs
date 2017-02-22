@@ -15,7 +15,7 @@ namespace SimpleDroid
 
     public interface IDialog
     {
-        Task<IDialogResult> Show(Activity activity);
+        Task<IDialogResult> Show(Activity activity, bool ignoreLastResult = false);
         IDialogResult LastResult { get; }
     }
 
@@ -32,12 +32,12 @@ namespace SimpleDroid
         /// <summary>
         /// ID from Strings.[id]
         /// </summary>
-        protected abstract int Yes { get; } 
+        protected abstract int Ok { get; } 
 
         /// <summary>
         /// ID from Strings.[id]
         /// </summary>
-        protected abstract int No { get; }
+        protected abstract int Cancel { get; }
 
         protected abstract int Layout { get; }
 
@@ -49,23 +49,30 @@ namespace SimpleDroid
                 selection => (sender, args) =>
                 {
                     result.SetResult(
-                        onClosing(view, new DialogClickEventArgsExtended(args, selection == Yes)));
+                        onClosing(view, new DialogClickEventArgsExtended(args, selection == Ok)));
                 };
 
             using (var builder = new AlertDialog.Builder(context)
-                .SetPositiveButton(context.GetString(Yes), onClose(Yes))
-                .SetNegativeButton(context.GetString(No), onClose(No)))
+                .SetPositiveButton(context.GetString(Ok), onClose(Ok))
+                .SetNegativeButton(context.GetString(Cancel), onClose(Cancel)))
             {
-                if (Layout > 0) builder.SetView(view);  
+                if (Layout > 0) OnBuilt(builder).SetView(view);  
                  // ...
                  builder.Show ();
             }
             return result.Task;
         }
-        public IDialogResult LastResult { get; private set; }
-        public virtual async Task<IDialogResult> Show(Activity activity)
+
+        protected virtual AlertDialog.Builder OnBuilt(AlertDialog.Builder builder)
         {
-            if (LastResult?.DontAskAgain??false)
+            // builder.SetCustomTitle("Title")
+            return builder;
+        }
+
+        public IDialogResult LastResult { get; private set; } = new DialogResult();
+        public virtual async Task<IDialogResult> Show(Activity activity, bool ignoreLastResult  = false)
+        {
+            if (LastResult.DontAskAgain && !ignoreLastResult)
             {
                 return LastResult;
             }
@@ -95,13 +102,14 @@ namespace SimpleDroid
         }
         private class DialogResult : IDialogResult
         {
-            public DialogResult(bool ok)
+            public DialogResult(bool ok = false, bool dontAskAgain = false)
             {
+                DontAskAgain = dontAskAgain;
                 Ok = ok;
             }
 
             public bool Ok { get; }
-            public bool DontAskAgain { get; } = false;
+            public bool DontAskAgain { get; } 
         }
     }
     

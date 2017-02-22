@@ -11,12 +11,12 @@ namespace SimpleDroid
         }
 
         TinyIoCContainer Container { get; }
-        public Navigator Create(AppCompatActivityBase activity)
+        public INavigator Create(AppCompatActivityBase activity)
         {
             return new Navigator(activity, Container.Resolve<FragmentFactory>());
         }
     }
-    public class Navigator
+    public class Navigator: INavigator
     {
         private readonly FragmentFactory _fragmentFactory;
 
@@ -35,17 +35,28 @@ namespace SimpleDroid
 
         public virtual void Navigate(int navId)
         {
-            var fragmentManager = _activity?.FragmentManager;
+            var fragmentManager = _activity.CurrentFragmentManager;
             if (fragmentManager != null && _activity.FragmentContainerID > 0 && navId > 0)
             {
                 using (var ft = fragmentManager.BeginTransaction())
                 {
                     var fragment = _fragmentFactory.Resolve(navId);
-                    // (fragment as FragmentBase)?.InflateMenu(_menu, MenuInflater);
-                    ft.Add(_activity.FragmentContainerID, fragment);
+                    ft.Add(_activity.FragmentContainerID, fragment, navId.ToString())
+                        .AddToBackStack(null);
                     ft.Commit();
                 }
             }
         }
+    }
+
+    public interface INavigator
+    {
+        void Navigate(IMenuItem menuItem);
+        
+        /// <summary>
+        /// MenuItem Id
+        /// </summary>
+        /// <param name="navId"></param>
+        void Navigate(int navId);
     }
 }

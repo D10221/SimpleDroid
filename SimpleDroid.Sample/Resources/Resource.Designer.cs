@@ -2107,9 +2107,6 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f060073
 			public const int exit_prompt_dontaskagain = 2131099763;
 			
-			// aapt resource value: 0x7f060072
-			public const int exit_propmt_text = 2131099762;
-			
 			// aapt resource value: 0x7f06003e
 			public const int expand_activities_button = 2131099710;
 			
@@ -2340,6 +2337,9 @@ namespace SimpleDroid
 			
 			// aapt resource value: 0x7f06004d
 			public const int textSpacerNoButtons = 2131099725;
+			
+			// aapt resource value: 0x7f060072
+			public const int textView1 = 2131099762;
 			
 			// aapt resource value: 0x7f060085
 			public const int time = 2131099781;
@@ -2695,14 +2695,17 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f070015
 			public const int bottom_sheet_behavior = 2131165205;
 			
+			// aapt resource value: 0x7f070027
+			public const int cancel = 2131165223;
+			
 			// aapt resource value: 0x7f070016
 			public const int character_counter_pattern = 2131165206;
 			
 			// aapt resource value: 0x7f07001d
 			public const int close_drawer = 2131165213;
 			
-			// aapt resource value: 0x7f070027
-			public const int dont_ask_again = 2131165223;
+			// aapt resource value: 0x7f070029
+			public const int dont_ask_again = 2131165225;
 			
 			// aapt resource value: 0x7f07001f
 			public const int exit = 2131165215;
@@ -2728,11 +2731,14 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f070026
 			public const int no = 2131165222;
 			
+			// aapt resource value: 0x7f070028
+			public const int ok = 2131165224;
+			
 			// aapt resource value: 0x7f07001e
 			public const int open_drawer = 2131165214;
 			
-			// aapt resource value: 0x7f070028
-			public const int press_back_again_to_exit = 2131165224;
+			// aapt resource value: 0x7f07002a
+			public const int press_back_again_to_exit = 2131165226;
 			
 			// aapt resource value: 0x7f070020
 			public const int settings = 2131165216;

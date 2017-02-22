@@ -1,8 +1,8 @@
 using System;
-using Android.App;
 using SimpleDroid.Db;
 using SimpleDroid.Dialogs;
 using TinyIoC;
+using Fragment =  Android.Support.V4.App.Fragment;
 
 namespace SimpleDroid
 {

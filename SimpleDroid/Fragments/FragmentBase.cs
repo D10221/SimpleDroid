@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
-using Android.App;
 using Android.OS;
 using Android.Views;
 using TinyIoC;
-
+using Fragment = Android.Support.V4.App.Fragment;
 namespace SimpleDroid
 {
     public abstract class FragmentBase : Fragment, IView, IMenuItemOnMenuItemClickListener, IDisposer
     {
         protected abstract int FragmentLayout { get; }
 
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            SetHasOptionsMenu(true);
-            base.OnCreate(savedInstanceState);
-        }
+        // not in V4
+        //public override void OnCreate(Bundle savedInstanceState)
+        //{
+        //    SetHasOptionsMenu(true);
+        //    base.OnCreate(savedInstanceState);
+        //}
         
         private readonly Subject<IEventArgs> _events = new Subject<IEventArgs>();
         

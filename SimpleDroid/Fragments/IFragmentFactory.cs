@@ -1,4 +1,4 @@
-using Android.App;
+using Android.Support.V4.App;
 using TinyIoC;
 
 namespace SimpleDroid

@@ -25,13 +25,16 @@ namespace SimpleDroid
         protected override int DrawerLayoutID { get; } = Resource.Id.app_bar_main;
         protected override int NavigationViewID { get; } = Resource.Id.navigation_view;
         public override int FragmentContainerID { get; } = Resource.Id.fragment_container;
-        
+        protected override int PressBackAgainToExit { get; } = Resource.String.press_back_again_to_exit;
+
+
         [Inject]
         private NavigatorFty NavigatorFty { get; set; }
 
-        private Navigator _navigator;
+        private INavigator _navigator;
 
-        private Navigator Navigator
+
+        protected INavigator Navigator
         {
             get
             {
@@ -42,12 +45,9 @@ namespace SimpleDroid
             }            
         }
 
-        protected override int PressBackAgainToExit { get; } = Resource.String.press_back_again_to_exit;
-
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
 
             this.When(nameof(base.OnNavigationItemSelected))
                 .Select(e => (e.Value as IMenuItem)?.ItemId ?? 0 )

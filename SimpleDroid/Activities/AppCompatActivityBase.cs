@@ -7,13 +7,14 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Android.OS;
 using Android.Support.Design.Widget;
+using Android.Support.V4.App;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using NLog;
 using TinyIoC;
+using ActionBarDrawerToggle = Android.Support.V7.App.ActionBarDrawerToggle;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace SimpleDroid
@@ -25,8 +26,8 @@ namespace SimpleDroid
         private Injector _injector;
         Injector Injector => _injector ?? (_injector = new Injector(Container, this));
 
-        private Logger _logger;
-        protected Logger Logger => _logger ?? (_logger = LogManager.GetCurrentClassLogger());
+        private ILogger _logger;
+        protected ILogger Logger => _logger ?? (_logger = LogManager.GetCurrentClassLogger());
 
         protected virtual int ToolbarLayout { get; } = 0;
 
@@ -81,19 +82,14 @@ namespace SimpleDroid
             SetContentView(ActivityLayout);
             Injector.BuildUp();
 
-            ExitOnDoubleBackPressed().ToBeDisposedBy(this);
+            CurrentFragmentManager.ClearBackStack();
 
-            if (Toolbar == null) return;
-
-            SetSupportActionBar(Toolbar);
-
-            if (ToolbarTitle != 0)
+            if (ExitDialog != null)
             {
-                SupportActionBar.SetTitle(ToolbarTitle);
+                ExitOnDoubleBackPressed().ToBeDisposedBy(this);
             }
 
-            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.SetDisplayShowHomeEnabled(true);
+            SetupToolBar(Toolbar);
 
             NavigationView?.OnNavigationItemSelected()
                 .Subscribe(e => OnNavigationItemSelected(e.Sender, e.EventArgs))
@@ -102,71 +98,22 @@ namespace SimpleDroid
             DrawerSetup();
         }
 
-        /// <summary>
-        /// Text from String's
-        /// </summary>
-        protected virtual int PressBackAgainToExit { get; } = 0;
-
-        protected virtual int DoubleBackPressedWaitingWindow { get; } = 2000;
-
-        /// <summary>
-        /// If Selected NO && DontAskAgain with the DIalog we Can't exit with the back button 
-        /// Then We can wait for Double Tap to exit         
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IDisposable ExitOnDoubleBackPressed()
+        protected virtual void SetupToolBar(Toolbar toolbar)
         {
-            var showing = false;
+            if (toolbar == null) return;
 
-            var backPressed = Events
-                .Where(e => e.Key == nameof(OnBackPressed))                
-                .Where(x => FragmentManager.BackStackEntryCount == 0
-                && ExitDialog?.LastResult != null
-                && ExitDialog.LastResult.DontAskAgain
-                && !ExitDialog.LastResult.Ok )
-                .Select(x=> showing)
-                .Timestamp();
-            
-            return 
-                backPressed
-                .Do(x => LogIt($"Back Pressed: {x}"))
-                .Where(x=> !x.Value)                   
-                .Subscribe( async x =>
-                {
-                    showing = true;
-                    LogIt($"Showing: {showing}");
+            SetSupportActionBar(Toolbar);
 
-                    
-                    var exit = backPressed
-                        .Take(1)
-                        .Timeout(TimeSpan.FromMilliseconds(DoubleBackPressedWaitingWindow))
-                        .Subscribe(e =>
-                            RunOnUiThread(() =>{
-                                LogIt($"Exiting");
-                                OnBackPressed(exit: true);                                
-                            }),
-                            error => LogIt(error.Message)
-                        );
+            if (ToolbarTitle != 0)
+            {
+                SupportActionBar.SetTitle(ToolbarTitle);
+            }
 
-                    RunOnUiThread(() =>
-                    {
-                        var makeText = Toast.MakeText(
-                            App.Current, PressBackAgainToExit, ToastLength.Short
-                        );                        
-                        makeText.Show();                        
-                    });
-
-                    await Task.Delay(DoubleBackPressedWaitingWindow);
-                    exit.Dispose();                    
-                    showing = false;
-                    LogIt($"Showing: {showing}");
-                });
+            //SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            //SupportActionBar.SetDisplayShowHomeEnabled(true);
         }
 
-        protected virtual void LogIt(string message , [CallerMemberName] string callerName = null)
-        {
-            Log.Debug(nameof(AppCompatActivityBase), $"{callerName}: {message}");
-        }
+
         protected virtual int OpenDrawerContentDescRes { get; } = 0;
         protected virtual int CloseDrawerContentDescRes { get; } = 0;
 
@@ -290,7 +237,79 @@ namespace SimpleDroid
         {
             _events.OnNext(new ActivityEventArgs(callerName, value));
         }
+        /// <summary>
+        /// Text from String's
+        /// </summary>
+        protected virtual int PressBackAgainToExit { get; } = 0;
 
+        protected virtual int DoubleBackPressedWaitingWindow { get; } = 2000;
+
+        /// <summary>
+        /// If Selected NO && DontAskAgain with the DIalog we Can't exit with the back button 
+        /// Then We can wait for Double Tap to exit         
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IDisposable ExitOnDoubleBackPressed()
+        {
+            var waiting = false;
+
+            var backPressed = Events
+                .Where(e => e.Key == nameof(OnBackPressed))
+                .Where(x => CurrentFragmentManager.BackStackEntryCount == 0
+                && ExitDialog == null 
+                || ((ExitDialog.LastResult.DontAskAgain) && !ExitDialog.LastResult.Ok))
+                .Select(x => waiting)
+                .Timestamp();
+
+            // TODO: Setup from settings 
+            var notify = true;
+            return
+                backPressed
+                .Do(x => Logger.Debug($"Back Pressed: {x}"))
+                .Where(x => !x.Value)
+                .Subscribe( x =>
+                {
+                    waiting = true;
+                    Logger.Debug($"waiting: {waiting}");
+
+                    var exit = backPressed
+                        .Take(1)
+                        .Timeout(TimeSpan.FromMilliseconds(DoubleBackPressedWaitingWindow))
+                        .Subscribe(e =>
+                            RunOnUiThread(() => {
+                                Logger.Debug($"Exiting");
+                                OnBackPressed(exit: true);
+                            }),
+                            error => Logger.Debug(error.Message)
+                        );
+                    
+                    if(notify)
+                    RunOnUiThread(() =>
+                    {
+                        var makeText = Snackbar.Make(
+                            Window.DecorView.RootView, PressBackAgainToExit, Snackbar.LengthShort
+                        );
+                        makeText.SetAction("I got it", view =>
+                        {
+                            notify = false;
+                        });
+                        makeText.SetCallback(new SnackbarCallback(
+                            onDimissedd: bar =>
+                            {
+                                exit.Dispose();
+                                Logger.Debug("Dimissed");
+                            }
+                        ));
+                        makeText.Show();
+                    });
+
+                    //await Task.Delay(DoubleBackPressedWaitingWindow);
+                    //exit.Dispose();
+                    waiting = false;
+                    Logger.Debug($"waiting: {waiting}");
+                });
+        }
+        
         protected virtual IDialog ExitDialog { get; } = null;
 
         protected virtual async void Exit()
@@ -301,7 +320,7 @@ namespace SimpleDroid
                 return;
             }
 
-            var result = await ExitDialog.Show(this);
+            var result = await ExitDialog.Show(this, !ExitDialog.LastResult.Ok );
 
             // Save it somewhere 
             Logger.Info($"DontAskAgain: {result.DontAskAgain}");
@@ -321,19 +340,19 @@ namespace SimpleDroid
             OnBackPressed(false);
         }
 
+        public FragmentManager CurrentFragmentManager => SupportFragmentManager;
         protected virtual void OnBackPressed(bool exit)
         {
             if (exit)
             {
-                FragmentManager.ClearBackStack();
+                CurrentFragmentManager.ClearBackStack();
                 base.OnBackPressed();
                 return;
             }
 
-            if (FragmentManager.BackStackEntryCount > 0)
-            {
-                FragmentManager.PopBackStack();
-                base.OnBackPressed();
+            if (CurrentFragmentManager.BackStackEntryCount > 1)
+            {                
+                CurrentFragmentManager.PopBackStack();             
                 return;
             }
 
@@ -343,12 +362,12 @@ namespace SimpleDroid
                 return;
             }
 
-
             Action maybeExit = async () =>
             {
                 var result = await ExitDialog.Show(this);
                 if (result.Ok)
                 {
+                    CurrentFragmentManager.ClearBackStack();
                     base.OnBackPressed();
                 }
             };
