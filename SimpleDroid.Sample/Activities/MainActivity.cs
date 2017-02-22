@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reactive.Linq;
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Views;
+using Android.Widget;
 using TinyIoC;
 
 namespace SimpleDroid
@@ -24,8 +26,7 @@ namespace SimpleDroid
         protected override int DrawerLayoutID { get; } = Resource.Id.app_bar_main;
         protected override int NavigationViewID { get; } = Resource.Id.navigation_view;
         public override int FragmentContainerID { get; } = Resource.Id.fragment_container;
-        protected override int ExitPromptMessageId { get; } = Resource.String.exit_prompt_message;
-
+        
         [Inject]
         private NavigatorFty NavigatorFty { get; set; }
 
@@ -61,11 +62,30 @@ namespace SimpleDroid
                 .ToBeDisposedBy(this);
         }
 
-        void Exit(int itemId)
+        protected virtual DialogFty DialogFty { get; private set; }
+        async void Exit(int itemId)
         {
             if (itemId != Resource.Id.nav_exit) return;
-            GetExitPromptDialogBuilder((s, e) => App.Current.Exit()).Show();
+            
+            DialogFty = new DialogFty(
+                Resource.Layout.exit_prompt_dialog,
+                Resource.String.yes, 
+                Resource.String.no,                 
+                Resource.Id.exit_prompt_dontaskagain
+                );
+
+            var result = await DialogFty.Show(this, this.LayoutInflater);
+
+            if (result[Resource.Id.exit_prompt_dontaskagain] as bool? ?? false)
+            {
+                Logger.Info("DontAskAgin");
+            }
+            if (result[Resource.String.yes] as bool? ?? false)
+            {
+                Logger.Info("Ok");
+            }
         }
+        
         void Navigate(int itemId)
         {
             if (itemId == Resource.Id.nav_exit) return;

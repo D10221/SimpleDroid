@@ -159,6 +159,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\exit_prompt_dialog.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml">
@@ -536,6 +539,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\splash_screen.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_bow_42_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_bow_1.png" />
   </ItemGroup>
   <Import Project="..\SimpleDroid\SimpleDroid.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

@@ -6,14 +6,20 @@
   <item>
     <animation-list
       xmlns:android="http://schemas.android.com/apk/res/android"
-      android:oneshot="false"
-      android:visible="false">
-      <item
-        android:drawable="@drawable/icon_bow"
-        android:duration="300" />
-      <item
-          android:drawable="@drawable/icon_bow_42"
-          android:duration="300" />
+      android:oneshot="false">
+      <item        
+        android:duration="300">
+        <bitmap 
+            android:src="@drawable/icon_bow"
+            android:gravity="center"/>
+      </item>
+      <item          
+          android:duration="300">
+        <bitmap
+          android:src="@drawable/icon_bow_1"
+          android:gravity="center"
+          />
+      </item>
     </animation-list>
   </item>
 </layer-list>

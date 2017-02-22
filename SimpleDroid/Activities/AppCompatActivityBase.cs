@@ -4,16 +4,18 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Android.Content;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
-using Android.Support.V7.Widget;
 using Android.Views;
+using Android.Widget;
 using Java.Lang;
 using NLog;
 using TinyIoC;
+using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace SimpleDroid
 {
@@ -223,12 +225,7 @@ namespace SimpleDroid
             _events.OnNext(new ActivityEventArgs(callerName, value));
         }
 
-        /// <summary>
-        /// If ExitPromptMessageId == 0 then No Prompt 
-        /// </summary>
-        protected virtual int ExitPromptMessageId { get; } = 0;  
-        protected virtual int YesId { get; set; }
-        protected virtual int NoId { get; set; }
+        protected virtual DialogFty DialogFty { get; }
         /// <summary>
         /// Don't exit on OnBackPressed
         /// </summary>
@@ -240,27 +237,67 @@ namespace SimpleDroid
                 return;
             }
 
-            if (ExitPromptMessageId == 0)
+            if (DialogFty == null)
             {
                 base.OnBackPressed();
                 return;
             }
 
-            GetExitPromptDialogBuilder((sender, args) =>
-            {
-                base.OnBackPressed();
-            }).Show();            
+            DialogFty.Show(this, this.LayoutInflater);
         }
 
-        protected AlertDialog.Builder GetExitPromptDialogBuilder(EventHandler<DialogClickEventArgs> onOk, EventHandler<DialogClickEventArgs> onCancel = null )
+      
+    }
+
+    public class DialogFty
+    {
+        public DialogFty(int dialogLayout,int yes, int no,  int dontAskAgain)
         {
-            onCancel = onCancel ?? ((sender, args) => { /*Nada*/ });
-
-            return new AlertDialog.Builder(this)
-                .SetMessage(this.GetString(ExitPromptMessageId))
-                .SetPositiveButton(YesId == 0  ? "Yes" : GetString(YesId), onOk)
-                .SetNegativeButton(NoId == 0 ? "No" : GetString(NoId), onCancel);
+            Yes = yes;
+            No = no;
+            DialogLayout = dialogLayout;
+            DontAskAgain = dontAskAgain;            
         }
+
+        protected virtual int Yes { get; } 
+        protected virtual int No { get; } 
+        protected virtual int DialogLayout { get; } 
+        private int DontAskAgain { get; }        
+        public Task<IDictionary<int, object>> Show(
+            Context context, 
+            LayoutInflater inflater)
+        {
+            var result = new DialogResult();
+
+            using (var view = inflater.Inflate(DialogLayout, null))
+            {
+                var checkBox = view.FindViewById<CheckBox>(DontAskAgain);                
+                
+                Func<int, EventHandler<DialogClickEventArgs>> onClose =
+                    yes => (sender, args) =>
+                    {                        
+                        result.SetResult(new Dictionary<int, object>
+                        {
+                            { Yes, yes == Yes},
+                            {DontAskAgain, checkBox.Checked }
+                        });
+                    };
+
+                using (var builder = new AlertDialog.Builder(context)
+                    .SetPositiveButton(context.GetString(Yes), onClose(Yes))
+                    .SetNegativeButton(context.GetString(No), onClose(No))
+                    .SetView(view))
+                {
+                    // ...
+                    builder.Show();
+                }
+            }
+            return result.Task;
+        }
+    }
+
+    class DialogResult : TaskCompletionSource<IDictionary<int, object>>
+    {
         
     }
 }

@@ -5,7 +5,6 @@ using Android.App;
 using Android.Content;
 using Android.Graphics.Drawables;
 using Android.OS;
-using Android.Views;
 
 namespace SimpleDroid
 {
@@ -16,7 +15,6 @@ namespace SimpleDroid
     public class SplashActivity : Activity
     {
         private AnimationDrawable _animation;
-
         private string Tag { get; } = nameof(SplashActivity);
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -30,27 +28,16 @@ namespace SimpleDroid
                 return;
             }
 
-            view.SetBackgroundResource(Resource.Drawable.splash_screen);
+            _animation = (view.Background as LayerDrawable)?
+                .Drawables()
+                .OfType<AnimationDrawable>()
+                .FirstOrDefault();
 
-            var layerDrawable = (view.Background as LayerDrawable);
-            this._animation = layerDrawable.Drawables().FirstOrDefault(x=>x.GetType() == typeof(AnimationDrawable)) as AnimationDrawable;
             if (_animation == null)
             {
                 Log( $"Window.DecorView.RootView.Background as AnimationDrawable is NotFound");
                 return;
             }
-
-            foreach (var frame in _animation.Frames())
-            {
-                var bitmap = frame as BitmapDrawable;
-                if (bitmap != null)
-                {
-                    bitmap.Gravity = GravityFlags.Center;
-                }
-            }
-            
-            view.Visibility = ViewStates.Visible;
-            
 
             Log();
         }
@@ -62,12 +49,9 @@ namespace SimpleDroid
 
         protected override async void OnResume()
         {
-            base.OnResume();
-            
             _animation?.Start();
-
+            base.OnResume();
             await Task.Delay(2000);             
-
             StartActivity(new Intent(Application.Context, typeof(MainActivity)));            
         }
     }

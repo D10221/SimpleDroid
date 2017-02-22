@@ -15,4 +15,7 @@
   <string name="home">home</string>
   <string name="messages">messages</string>
   <string name="exit_prompt_message">Exit?</string>
+  <string name="yes">yes</string>
+  <string name="no">no</string>
+  <string name="dont_ask_again">Dont Ask Again</string>  
 </resources>

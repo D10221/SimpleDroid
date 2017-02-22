@@ -12,13 +12,5 @@ namespace SimpleDroid
                 yield return animation.GetFrame(i);
             }
         }
-
-        public static IEnumerable<Drawable> Drawables(this LayerDrawable layer)
-        {
-            for (var i = 0; i < layer.NumberOfLayers; i++)
-            {
-                yield return layer.GetDrawable(i);
-            }
-        }
     }
 }
