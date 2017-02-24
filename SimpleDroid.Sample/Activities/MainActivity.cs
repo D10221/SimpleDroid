@@ -4,7 +4,6 @@ using Android.App;
 using Android.OS;
 using Android.Views;
 using SimpleDroid.Extensionsss;
-using TinyIoC;
 
 namespace SimpleDroid
 {    
@@ -13,7 +12,7 @@ namespace SimpleDroid
         // MainLauncher = true, 
         Theme = "@style/MyTheme",
         Icon = "@drawable/icon")]
-    public class MainActivity : AppCompatActivityBase
+    public class MainActivity : ActivityBase
     {
         #region backing fields
 
@@ -26,24 +25,7 @@ namespace SimpleDroid
         protected override int NavigationViewID { get; } = Resource.Id.navigation_view;
         public override int FragmentContainerID { get; } = Resource.Id.fragment_container;
         protected override int PressBackAgainToExit { get; } = Resource.String.press_back_again_to_exit;
-
-
-        [Inject]
-        private NavigatorFty NavigatorFty { get; set; }
-
-        private INavigator _navigator;
-
-
-        protected INavigator Navigator
-        {
-            get
-            {
-                if (_navigator != null) return _navigator;
-                _navigator = NavigatorFty.Create(this);
-                Container.Register((s, e) => _navigator);
-                return _navigator;
-            }            
-        }
+        
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -54,14 +36,15 @@ namespace SimpleDroid
                 .Where(itemId => itemId > 0)
                 .DistinctUntilChanged()
                 .StartWith(Resource.Id.nav_home)
-                .Subscribe(Navigate)
+                .Subscribe(Navigator.Navigate)
                 .ToBeDisposedBy(this);
 
             this.When(nameof(base.OnNavigationItemSelected))
                 .Select(e => (e.Value as IMenuItem)?.ItemId ?? 0 )
                 .Where(itemId => itemId ==  Resource.Id.nav_exit)                        
                 .Subscribe(i=> Exit())
-                .ToBeDisposedBy(this);
+                .ToBeDisposedBy(this);           
+
         }
 
         private IDialog _exitDialog;
@@ -76,12 +59,6 @@ namespace SimpleDroid
             }
         }
         
-
-        void Navigate(int itemId)
-        {
-            if (itemId == Resource.Id.nav_exit) return;
-            Navigator.Navigate(itemId);
-        }
 
     }    
 

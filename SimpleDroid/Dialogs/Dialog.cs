@@ -13,7 +13,7 @@ namespace SimpleDroid
         bool DontAskAgain { get; }
     }
 
-    public interface IDialog
+    public interface IDialog: IHaveEvents
     {
         Task<IDialogResult> Show(Activity activity, bool ignoreLastResult = false);
         IDialogResult LastResult { get; }
@@ -27,8 +27,10 @@ namespace SimpleDroid
             Ok = ok;
         }
     }
-    public abstract class DialogBase : IDialog
-    {       
+    public abstract class DialogBase : EventsBase, IDialog
+    {
+        private IDialogResult _lastResult = new DialogResult();
+
         /// <summary>
         /// ID from Strings.[id]
         /// </summary>
@@ -49,16 +51,18 @@ namespace SimpleDroid
                 selection => (sender, args) =>
                 {
                     result.SetResult(
-                        onClosing(view, new DialogClickEventArgsExtended(args, selection == Ok)));
+                        onClosing(view, new 
+                        DialogClickEventArgsExtended(args, selection == Ok)));                    
                 };
 
             using (var builder = new AlertDialog.Builder(context)
                 .SetPositiveButton(context.GetString(Ok), onClose(Ok))
                 .SetNegativeButton(context.GetString(Cancel), onClose(Cancel)))
             {
-                if (Layout > 0) OnBuilt(builder).SetView(view);  
-                 // ...
-                 builder.Show ();
+                if (Layout > 0) OnBuilt(builder).SetView(view);
+                // ...
+                RaiseEvent(nameof(Show));
+                builder.Show ();
             }
             return result.Task;
         }
@@ -69,7 +73,17 @@ namespace SimpleDroid
             return builder;
         }
 
-        public IDialogResult LastResult { get; private set; } = new DialogResult();
+        public IDialogResult LastResult
+        {
+            get { return _lastResult; }
+            private set
+            {
+                if (_lastResult == value) return;
+                _lastResult = value;
+                RaiseEvent(value);
+            }
+        }
+
         public virtual async Task<IDialogResult> Show(Activity activity, bool ignoreLastResult  = false)
         {
             if (LastResult.DontAskAgain && !ignoreLastResult)
@@ -97,8 +111,8 @@ namespace SimpleDroid
 
         protected virtual IDialogResult OnClosing(View view, DialogClickEventArgsExtended args)
         {
+            RaiseEvent();
             return new DialogResult(args.Ok);
-
         }
         private class DialogResult : IDialogResult
         {
@@ -110,6 +124,17 @@ namespace SimpleDroid
 
             public bool Ok { get; }
             public bool DontAskAgain { get; } 
+        }
+    }
+
+    public static class DialogBaseExtensions
+    {
+        /// <summary>
+        /// Can't exit
+        /// </summary>        
+        public static bool IsDeadLock(this IDialog dialog)
+        {
+            return dialog != null && dialog.LastResult.DontAskAgain && !dialog.LastResult.Ok;
         }
     }
     

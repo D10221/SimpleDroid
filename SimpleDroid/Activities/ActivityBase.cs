@@ -4,14 +4,12 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Views;
-using Android.Widget;
 using NLog;
 using TinyIoC;
 using ActionBarDrawerToggle = Android.Support.V7.App.ActionBarDrawerToggle;
@@ -19,7 +17,7 @@ using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace SimpleDroid
 {
-    public abstract class AppCompatActivityBase : AppCompatActivity, IDisposer, View.IOnClickListener, IHaveEvents
+    public abstract class ActivityBase : AppCompatActivity, IDisposer, View.IOnClickListener, IHaveEvents
     {
         protected TinyIoCContainer Container { get; } = TinyIoCContainer.Current;
 
@@ -76,6 +74,10 @@ namespace SimpleDroid
         protected abstract int ToolbarTitle { get; }
         protected abstract int ActivityLayout { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bundle"></param>
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -92,10 +94,32 @@ namespace SimpleDroid
             SetupToolBar(Toolbar);
 
             NavigationView?.OnNavigationItemSelected()
-                .Subscribe(e => OnNavigationItemSelected(e.Sender, e.EventArgs))
+                .Subscribe(e => OnNavigationItemSelected(e.EventArgs))
                 .ToBeDisposedBy(this);
 
             DrawerSetup();
+        }
+
+        private INavigatorFty _navigatorFty;
+        private INavigatorFty NavigatorFty => _navigatorFty ?? (_navigatorFty = Container.Resolve<INavigatorFty>());
+
+        private INavigator _navigator;
+
+        protected virtual INavigator Navigator
+        {
+            get
+            {
+                if (_navigator != null) return _navigator;
+                _navigator = NavigatorFty.Create(this);
+                Container.Register((s, e) => _navigator);
+                return _navigator;
+            }
+        }
+        protected virtual void OnNavigationItemSelected(
+            NavigationView.NavigationItemSelectedEventArgs args)
+        {
+            RaiseEvent(args.MenuItem);
+            Drawer.CloseDrawers();
         }
 
         protected virtual void SetupToolBar(Toolbar toolbar)
@@ -144,25 +168,23 @@ namespace SimpleDroid
 
         protected virtual int ToolbarMenuLayout { get; private set; } = 0;
 
+        protected IMenu Menu { get; private set; }
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             InflateMenu(menu, ToolbarMenuLayout);
+            Menu = menu;
             return base.OnCreateOptionsMenu(menu);
         }
 
-        private void InflateMenu(IMenu menu, int toolbarMenuLayout)
+        protected virtual void InflateMenu(IMenu menu, int toolbarMenuLayout)
         {
-            if (toolbarMenuLayout > 0)
-            {
-                if (menu != null)
-                {
-                    menu.Clear();
+            if (toolbarMenuLayout <= 0 || menu == null) return;
 
-                    MenuInflater.Inflate(toolbarMenuLayout, menu);
+            menu.Clear();
 
-                    OnMenuInflated(menu);
-                }
-            }
+            MenuInflater.Inflate(toolbarMenuLayout, menu);
+
+            OnMenuInflated(menu);            
         }
 
         protected virtual void OnMenuInflated(IMenu menu)
@@ -174,6 +196,7 @@ namespace SimpleDroid
         public ViewState ViewState { get; private set; }
 
         private readonly Subject<IEventArgs> _events = new Subject<IEventArgs>();
+        
         public IObservable<IEventArgs> Events => _events.AsObservable();
 
         public IList<IDisposable> Disposables { get; } = new List<IDisposable>();
@@ -182,14 +205,7 @@ namespace SimpleDroid
         {
             RaiseEvent(v);
         }
-
-        protected virtual void OnNavigationItemSelected(object sender,
-            NavigationView.NavigationItemSelectedEventArgs args)
-        {
-            RaiseEvent(args.MenuItem);
-            Drawer.CloseDrawers();
-        }
-
+        
         protected override void OnRestart()
         {
             ViewState = ViewState.Restarting;
@@ -255,16 +271,15 @@ namespace SimpleDroid
 
             var backPressed = Events
                 .Where(e => e.Key == nameof(OnBackPressed))
-                .Where(x => CurrentFragmentManager.BackStackEntryCount == 0
+                .Where(x => CurrentFragmentManager.IsBackStackEmpty(0)
                 && ExitDialog == null 
-                || ((ExitDialog.LastResult.DontAskAgain) && !ExitDialog.LastResult.Ok))
+                || ExitDialog.IsDeadLock())
                 .Select(x => waiting)
                 .Timestamp();
 
             // TODO: Setup from settings 
             var notify = true;
-            return
-                backPressed
+            return backPressed
                 .Do(x => Logger.Debug($"Back Pressed: {x}"))
                 .Where(x => !x.Value)
                 .Subscribe( x =>
@@ -282,31 +297,35 @@ namespace SimpleDroid
                             }),
                             error => Logger.Debug(error.Message)
                         );
-                    
-                    if(notify)
-                    RunOnUiThread(() =>
-                    {
-                        var makeText = Snackbar.Make(
-                            Window.DecorView.RootView, PressBackAgainToExit, Snackbar.LengthShort
-                        );
-                        makeText.SetAction("I got it", view =>
-                        {
-                            notify = false;
-                        });
-                        makeText.SetCallback(new SnackbarCallback(
-                            onDimissedd: bar =>
-                            {
-                                exit.Dispose();
-                                Logger.Debug("Dimissed");
-                            }
-                        ));
-                        makeText.Show();
-                    });
 
-                    //await Task.Delay(DoubleBackPressedWaitingWindow);
-                    //exit.Dispose();
-                    waiting = false;
-                    Logger.Debug($"waiting: {waiting}");
+                    if (notify)
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            var makeText = Snackbar.Make(
+                                Window.DecorView.RootView,
+                                PressBackAgainToExit,
+                                Snackbar.LengthShort
+                            );
+
+                            makeText.SetAction("I got it", view =>
+                            {
+                                notify = false;
+                            });
+
+                            makeText.SetCallback(new SnackbarCallback(
+                                onDimissedd: bar =>
+                                {
+                                    exit.Dispose();
+                                    Logger.Debug("Dimissed");
+                                    waiting = false;
+                                    Logger.Debug($"waiting: {waiting}");
+                                }
+                            ));
+
+                            makeText.Show();
+                        });
+                    }                                        
                 });
         }
         
@@ -350,7 +369,7 @@ namespace SimpleDroid
                 return;
             }
 
-            if (CurrentFragmentManager.BackStackEntryCount > 1)
+            if (!CurrentFragmentManager.IsBackStackEmpty())
             {                
                 CurrentFragmentManager.PopBackStack();             
                 return;

@@ -1,4 +1,5 @@
 using System;
+using NLog;
 using SimpleDroid.Db;
 using SimpleDroid.Dialogs;
 using TinyIoC;
@@ -26,6 +27,11 @@ namespace SimpleDroid
                 (c, parameters) =>
                     db ?? (db = new Database(c.Resolve<IDatabaseFty>()));
             container.Register(database);
+
+
+            container.Register<Func<object, ILogger>>((target => LogManager.GetLogger(target.GetType().Name)));
+
+            container.Register<INavigatorFty, NavigatorFty>();
         }
     }
 }

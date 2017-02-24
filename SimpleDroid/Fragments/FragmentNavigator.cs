@@ -1,9 +1,15 @@
 ﻿using Android.Views;
+using NLog;
 using TinyIoC;
 
 namespace SimpleDroid
 {
-    public class NavigatorFty
+    public interface INavigatorFty
+    {
+        INavigator Create(ActivityBase activity);
+    }
+
+    public class NavigatorFty: INavigatorFty
     {
         public NavigatorFty(TinyIoCContainer container)
         {
@@ -11,18 +17,32 @@ namespace SimpleDroid
         }
 
         TinyIoCContainer Container { get; }
-        public INavigator Create(AppCompatActivityBase activity)
+        public INavigator Create(ActivityBase activity)
         {
-            return new Navigator(activity, Container.Resolve<FragmentFactory>());
+            return new FragmentNavigator(activity, Container.Resolve<FragmentFactory>());
         }
     }
-    public class Navigator: INavigator
+
+    public interface INavigator
     {
-        private readonly FragmentFactory _fragmentFactory;
+        void Navigate(IMenuItem menuItem);
+        
+        /// <summary>
+        /// MenuItem Id
+        /// </summary>
+        /// <param name="navId"></param>
+        void Navigate(int navId);
+    }
 
-        private readonly AppCompatActivityBase _activity;
+    public class FragmentNavigator: INavigator
+    {
+        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
 
-        public Navigator(AppCompatActivityBase activity, FragmentFactory fragmentFactory)
+        private readonly IFragmentFactory _fragmentFactory;
+
+        private readonly ActivityBase _activity;
+
+        public FragmentNavigator(ActivityBase activity, IFragmentFactory fragmentFactory)
         {
             _activity = activity;
             _fragmentFactory = fragmentFactory;
@@ -36,27 +56,23 @@ namespace SimpleDroid
         public virtual void Navigate(int navId)
         {
             var fragmentManager = _activity.CurrentFragmentManager;
+
             if (fragmentManager != null && _activity.FragmentContainerID > 0 && navId > 0)
             {
                 using (var ft = fragmentManager.BeginTransaction())
                 {
                     var fragment = _fragmentFactory.Resolve(navId);
+                    if (fragment == null)
+                    {
+                        _logger.Debug($"No Fragment for NavId: {navId}");
+                        return; 
+                    }
+
                     ft.Add(_activity.FragmentContainerID, fragment, navId.ToString())
                         .AddToBackStack(null);
                     ft.Commit();
                 }
             }
         }
-    }
-
-    public interface INavigator
-    {
-        void Navigate(IMenuItem menuItem);
-        
-        /// <summary>
-        /// MenuItem Id
-        /// </summary>
-        /// <param name="navId"></param>
-        void Navigate(int navId);
     }
 }

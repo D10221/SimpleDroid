@@ -10,8 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Activities\AppCompatActivityBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Activities\Navigator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DroidApp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\DatabaseFty.cs" />
@@ -23,14 +22,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Dialogs\Dialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Disposables\Disposable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Disposables\DisposableExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ConvertExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\EventsBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\EventsExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\IEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\IHaveEvents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\AnimationDrawableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ApplicationContextExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ConvertExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\FragmentManagerExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IntentExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\LayerDrawableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\MenuExtensions.cs" />
@@ -38,7 +39,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextViewExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentNavigator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\IFragmentFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\DroidConsoleTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Snackbars\SnackCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\InjectAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\Injector.cs" />

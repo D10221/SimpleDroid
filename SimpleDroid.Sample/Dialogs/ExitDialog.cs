@@ -11,7 +11,7 @@ namespace SimpleDroid.Dialogs
         protected override int Layout { get; } = Resource.Layout.exit_prompt_dialog;
 
         protected override IDialogResult OnClosing(View view, DialogClickEventArgsExtended args)
-        {
+        {            
             return new ConfirmExitDialogResult
             {                
                 DontAskAgain = view.FindViewById<CheckBox>(Resource.Id.exit_prompt_dontaskagain).Checked,

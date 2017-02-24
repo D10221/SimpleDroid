@@ -18,5 +18,10 @@ namespace SimpleDroid
                 manager.PopBackStack();
             }
         }
+
+        public static bool IsBackStackEmpty(this Android.Support.V4.App.FragmentManager manager, int minCount = 1 )
+        {
+            return manager.BackStackEntryCount <= minCount;
+        }
     }
 }
