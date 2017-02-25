@@ -2,14 +2,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.Graphics.Drawables;
 using Android.OS;
 
 namespace SimpleDroid
 {
     [Activity(
-        Theme = "@style/MyTheme.Splash",        
+        Theme = "@style/MyTheme.Splash",
         MainLauncher = true,
         NoHistory = true)]
     public class SplashActivity : Activity
@@ -35,7 +34,7 @@ namespace SimpleDroid
 
             if (_animation == null)
             {
-                Log( $"Window.DecorView.RootView.Background as AnimationDrawable is NotFound");
+                Log($"Window.DecorView.RootView.Background as AnimationDrawable is NotFound");
                 return;
             }
 
@@ -44,15 +43,15 @@ namespace SimpleDroid
 
         private void Log(string message = null, [CallerMemberName] string callerName = null)
         {
-            Android.Util.Log.Debug(Tag, $"{callerName??"?"}: {message}");
+            Android.Util.Log.Debug(Tag, $"{callerName ?? "?"}: {message}");
         }
 
         protected override async void OnResume()
         {
             _animation?.Start();
             base.OnResume();
-            await Task.Delay(2000);             
-            StartActivity(new Intent(Application.Context, typeof(MainActivity)));            
+            await Task.Delay(2000);
+            this.StartActivity<MainActivity>();
         }
     }
 }

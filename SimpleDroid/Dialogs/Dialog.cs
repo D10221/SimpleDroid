@@ -13,7 +13,7 @@ namespace SimpleDroid
         bool DontAskAgain { get; }
     }
 
-    public interface IDialog: IHaveEvents
+    public interface IDialog: ISubscribable
     {
         Task<IDialogResult> Show(Activity activity, bool ignoreLastResult = false);
         IDialogResult LastResult { get; }
@@ -132,7 +132,7 @@ namespace SimpleDroid
         /// <summary>
         /// Can't exit
         /// </summary>        
-        public static bool IsDeadLock(this IDialog dialog)
+        public static bool IsDeadLocked(this IDialog dialog)
         {
             return dialog != null && dialog.LastResult.DontAskAgain && !dialog.LastResult.Ok;
         }

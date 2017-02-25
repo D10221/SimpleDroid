@@ -2716,6 +2716,9 @@ namespace SimpleDroid
 			// aapt resource value: 0x7f070022
 			public const int home = 2131165218;
 			
+			// aapt resource value: 0x7f07002b
+			public const int i_got_it = 2131165227;
+			
 			// aapt resource value: 0x7f070023
 			public const int messages = 2131165219;
 			

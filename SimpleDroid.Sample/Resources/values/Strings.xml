@@ -20,5 +20,6 @@
   <string name="cancel">cancel</string>
   <string name="ok">ok</string>
   <string name="dont_ask_again">Dont Ask Again</string>  
-  <string name="press_back_again_to_exit">Press back again to exit</string>  
+  <string name="press_back_again_to_exit">Press back again to exit</string>
+  <string name="i_got_it">I got it</string>
 </resources>

@@ -8,8 +8,7 @@ using Android.Widget;
 namespace SimpleDroid
 {
     static class TinyBinder
-    {
-        
+    {        
         public static IDisposable BindTo<T, TR, TView>(
             this TView view,
             T source,
@@ -40,7 +39,7 @@ namespace SimpleDroid
                 .Throttle(TimeSpan.FromMilliseconds(250))
                 .Subscribe(text => onViewChanged(source, text));
 
-            return new Disposable(() =>
+            return new Subscription(() =>
             {
                 subs.Dispose();
                 subs2.Dispose();

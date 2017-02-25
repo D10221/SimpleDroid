@@ -5,13 +5,13 @@ namespace SimpleDroid
 {
     public static class DisposableExtensions
     {
-        public static void ToBeDisposedBy(this IDisposable disposable , IDisposer disposer)
+        public static void ToBeDisposedBy(this IDisposable disposable , ISubscriber subscriber)
         {
-            disposer.Disposables.Add(disposable);
+            subscriber.Subscriptions.Add(disposable);
         }
-        public static void ToBeDisposedBy(this IDisposable disposable , IDisposer disposer, string name)
+        public static void ToBeDisposedBy(this IDisposable disposable , ISubscriber subscriber, string name)
         {
-            disposer.Disposables.Add(new Disposable(disposable.Dispose, name));
+            subscriber.Subscriptions.Add(new Subscription(disposable.Dispose, name));
         }
 
         public static void Dispose(this IEnumerable<IDisposable> disposables)
@@ -22,9 +22,9 @@ namespace SimpleDroid
             }
         }
 
-        public static void Dispose(this IDisposer dispopser)
+        public static void Dispose(this ISubscriber dispopser)
         {
-            dispopser?.Disposables?.Dispose();
+            dispopser?.Subscriptions?.Dispose();
         }
     }
 }

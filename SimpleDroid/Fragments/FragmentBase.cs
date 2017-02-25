@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
@@ -9,7 +10,7 @@ using TinyIoC;
 using Fragment = Android.Support.V4.App.Fragment;
 namespace SimpleDroid
 {
-    public abstract class FragmentBase : Fragment, IView, IMenuItemOnMenuItemClickListener, IDisposer
+    public abstract class FragmentBase : Fragment, IView, IMenuItemOnMenuItemClickListener, ISubscriber
     {
         protected abstract int FragmentLayout { get; }
 
@@ -20,13 +21,13 @@ namespace SimpleDroid
         //    base.OnCreate(savedInstanceState);
         //}
         
-        private readonly Subject<IEventArgs> _events = new Subject<IEventArgs>();
+        private readonly Subject<IEvent> _events = new Subject<IEvent>();
         
-        public IObservable<IEventArgs> Events => _events.AsObservable();
+        public IObservable<IEvent> Events => _events.AsObservable();
 
         protected void RaiseEvent(object value = null , [CallerMemberName] string key = null)
         {
-            _events.OnNext(new FragmentEventArgs(key, value));
+            _events.OnNext(new FragmentEvent(key, value));
         }
         public virtual int ToolbarMenuLayout { get; } = 0;
 
@@ -74,10 +75,10 @@ namespace SimpleDroid
             return view;
         }
 
-        public IList<IDisposable> Disposables { get; } = new List<IDisposable>();
+        public CompositeDisposable Subscriptions { get; } = new CompositeDisposable();
         public override void OnDestroy()
         {
-            Disposables.Dispose();
+            Subscriptions.Dispose();
             base.OnDestroy();
         }
 

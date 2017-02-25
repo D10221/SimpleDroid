@@ -1,6 +1,6 @@
 ﻿namespace SimpleDroid
 {
-    public interface IView : IHaveEvents
+    public interface IView : ISubscribable
     {
 
     }

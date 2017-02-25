@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reactive.Disposables;
 using System.Runtime.CompilerServices;
 using NLog;
 
 namespace SimpleDroid
 {
-    public class ViewModelBase: IViewModel, IDisposer
+    public class ViewModelBase: IViewModel, ISubscriber
     {
         private Logger _logger;
         protected Logger Logger => _logger ?? (_logger = LogManager.GetCurrentClassLogger());
-        public IList<IDisposable> Disposables { get; } = new List<IDisposable>();
+        public CompositeDisposable Subscriptions { get; } = new CompositeDisposable();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -21,7 +22,7 @@ namespace SimpleDroid
         }
         public virtual void Dispose()
         {
-           Disposables?.Dispose();
+           Subscriptions?.Dispose();
         }
 
         /// <summary>

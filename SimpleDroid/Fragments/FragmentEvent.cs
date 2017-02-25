@@ -1,8 +1,8 @@
 namespace SimpleDroid
 {
-    public class FragmentEventArgs: IEventArgs
+    public class FragmentEvent: IEvent
     {
-        public FragmentEventArgs(string key, object value = null)
+        public FragmentEvent(string key, object value = null)
         {
             Key = key;
             Value = value;

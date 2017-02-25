@@ -1,78 +1,40 @@
 using System;
-using System.Collections.Generic;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using Android.OS;
 using Android.Support.Design.Widget;
-using Android.Support.V4.App;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using NLog;
 using TinyIoC;
 using ActionBarDrawerToggle = Android.Support.V7.App.ActionBarDrawerToggle;
+using FragmentManager = Android.Support.V4.App.FragmentManager;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace SimpleDroid
 {
-    public abstract class ActivityBase : AppCompatActivity, IDisposer, View.IOnClickListener, IHaveEvents
+    public abstract class ActivityBase : AppCompatActivity, ISubscriber, View.IOnClickListener, ISubscribable
     {
-        protected TinyIoCContainer Container { get; } = TinyIoCContainer.Current;
+        private TinyIoCContainer Container { get; } = TinyIoCContainer.Current;
 
         private Injector _injector;
         Injector Injector => _injector ?? (_injector = new Injector(Container, this));
 
         private ILogger _logger;
-        protected ILogger Logger => _logger ?? (_logger = LogManager.GetCurrentClassLogger());
+        protected ILogger Logger => _logger ?? (_logger = LogManager.GetLogger(GetType().Name));
 
-        protected virtual int ToolbarLayout { get; } = 0;
-
-        private Toolbar _toolbar;
-
-        protected virtual Toolbar Toolbar
-        {
-            get
-            {
-                if (_toolbar != null) return _toolbar;
-                if (ToolbarLayout > 0)
-                    _toolbar = FindViewById<Toolbar>(ToolbarLayout);
-                return _toolbar;
-            }
-        }
-
-        protected virtual int DrawerLayoutID { get; } = 0;
-
-        private DrawerLayout _drawer;
-
-        protected virtual DrawerLayout Drawer
-        {
-            get
-            {
-                if (_drawer != null) return _drawer;
-                if (DrawerLayoutID > 0)
-                    _drawer = FindViewById<DrawerLayout>(DrawerLayoutID);
-                return _drawer;
-            }
-        }
-
-        protected virtual int NavigationViewID { get; } = 0;
-
-        private NavigationView _navigationView;
-
-        protected virtual NavigationView NavigationView
-        {
-            get
-            {
-                if (_navigationView != null) return _navigationView;
-                _navigationView = FindViewById<NavigationView>(NavigationViewID);
-                return _navigationView;
-            }
-        }
+        protected abstract View View { get; }
+        protected abstract Toolbar Toolbar { get; }
+        protected abstract DrawerLayout Drawer { get; }
+        protected abstract NavigationView NavigationView { get; }
 
         protected abstract int ToolbarTitle { get; }
-        protected abstract int ActivityLayout { get; }
+
+        // protected abstract int ActivityLayout { get; }
 
         /// <summary>
         /// 
@@ -81,15 +43,12 @@ namespace SimpleDroid
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            SetContentView(ActivityLayout);
+            SetContentView(View);
             Injector.BuildUp();
 
             CurrentFragmentManager.ClearBackStack();
 
-            if (ExitDialog != null)
-            {
-                ExitOnDoubleBackPressed().ToBeDisposedBy(this);
-            }
+            ConfigureExitDialog();
 
             SetupToolBar(Toolbar);
 
@@ -97,8 +56,41 @@ namespace SimpleDroid
                 .Subscribe(e => OnNavigationItemSelected(e.EventArgs))
                 .ToBeDisposedBy(this);
 
-            DrawerSetup();
+            DrawerSetup(Drawer);
         }
+
+        protected virtual void ConfigureExitDialog()
+        {
+            if (ExitDialog != null)
+            {
+                var events = this.WhenBackPressed().Where(x => IsDeadLocked(ExitDialog));
+
+                OnDoubleEvent(
+                    events: events,
+                    action: () => OnBackPressed(exit: true)
+                ).ToBeDisposedBy(this);
+
+                if(PressBackAgainToExitNotification!=null)
+                this.SubscribeNotification(
+                    events, PressBackAgainToExitNotification                    
+                ).ToBeDisposedBy(this);
+            }
+            else
+            {
+
+                OnDoubleEvent(
+                    events: this.WhenBackPressed(),
+                    action: () => OnBackPressed(exit: true)
+                ).ToBeDisposedBy(this);
+
+                if (PressBackAgainToExitNotification != null)
+                    this.SubscribeNotification(this.WhenBackPressed(),
+                    PressBackAgainToExitNotification
+                ).ToBeDisposedBy(this);
+            }
+        }
+
+        protected abstract INotification PressBackAgainToExitNotification { get; } 
 
         private INavigatorFty _navigatorFty;
         private INavigatorFty NavigatorFty => _navigatorFty ?? (_navigatorFty = Container.Resolve<INavigatorFty>());
@@ -115,6 +107,7 @@ namespace SimpleDroid
                 return _navigator;
             }
         }
+
         protected virtual void OnNavigationItemSelected(
             NavigationView.NavigationItemSelectedEventArgs args)
         {
@@ -128,10 +121,7 @@ namespace SimpleDroid
 
             SetSupportActionBar(Toolbar);
 
-            if (ToolbarTitle != 0)
-            {
-                SupportActionBar.SetTitle(ToolbarTitle);
-            }
+            if (ToolbarTitle != 0) SupportActionBar.SetTitle(ToolbarTitle);
 
             //SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             //SupportActionBar.SetDisplayShowHomeEnabled(true);
@@ -141,19 +131,19 @@ namespace SimpleDroid
         protected virtual int OpenDrawerContentDescRes { get; } = 0;
         protected virtual int CloseDrawerContentDescRes { get; } = 0;
 
-        private void DrawerSetup()
+        protected virtual void DrawerSetup(DrawerLayout drawer)
         {
-            if (Drawer == null) return;
+            if (drawer == null) return;
 
             var drawerToggle = new ActionBarDrawerToggle(
                 /*activity:*/ this,
-                /*drawerLayout:*/ Drawer,
+                /*drawerLayout:*/ drawer,
                 /*toolbar: */Toolbar,
                 OpenDrawerContentDescRes,
                 CloseDrawerContentDescRes);
 
-            Drawer.AddDrawerListener(drawerToggle);
-            Drawer.OnDrawerOpened().Subscribe(OnDrawerOpened).ToBeDisposedBy(this);
+            drawer.AddDrawerListener(drawerToggle);
+            drawer.OnDrawerOpened().Subscribe(OnDrawerOpened).ToBeDisposedBy(this);
 
             drawerToggle.SyncState();
             drawerToggle.ToBeDisposedBy(this);
@@ -168,11 +158,9 @@ namespace SimpleDroid
 
         protected virtual int ToolbarMenuLayout { get; private set; } = 0;
 
-        protected IMenu Menu { get; private set; }
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             InflateMenu(menu, ToolbarMenuLayout);
-            Menu = menu;
             return base.OnCreateOptionsMenu(menu);
         }
 
@@ -184,7 +172,7 @@ namespace SimpleDroid
 
             MenuInflater.Inflate(toolbarMenuLayout, menu);
 
-            OnMenuInflated(menu);            
+            OnMenuInflated(menu);
         }
 
         protected virtual void OnMenuInflated(IMenu menu)
@@ -195,17 +183,30 @@ namespace SimpleDroid
         public virtual int FragmentContainerID { get; } = 0;
         public ViewState ViewState { get; private set; }
 
-        private readonly Subject<IEventArgs> _events = new Subject<IEventArgs>();
-        
-        public IObservable<IEventArgs> Events => _events.AsObservable();
+        private readonly Subject<IEvent> _events = new Subject<IEvent>();
 
-        public IList<IDisposable> Disposables { get; } = new List<IDisposable>();
+        #region ISubscribable
+
+        public IObservable<IEvent> Events => _events.AsObservable();
+
+        protected virtual void RaiseEvent(object value = null, [CallerMemberName] string callerName = null)
+        {
+            _events.OnNext(new ActivityEvent(callerName, value));
+        }
+
+        #endregion
+
+        #region ISubscriptor
+
+        public CompositeDisposable Subscriptions { get; } = new CompositeDisposable();
+
+        #endregion
 
         public virtual void OnClick(View v)
         {
             RaiseEvent(v);
         }
-        
+
         protected override void OnRestart()
         {
             ViewState = ViewState.Restarting;
@@ -245,91 +246,37 @@ namespace SimpleDroid
         {
             ViewState = ViewState.Destroying;
             RaiseEvent();
-            Disposables.Dispose();
+            Subscriptions.Dispose();
             base.OnDestroy();
         }
 
-        private void RaiseEvent(object value = null, [CallerMemberName] string callerName = null)
-        {
-            _events.OnNext(new ActivityEventArgs(callerName, value));
-        }
-        /// <summary>
-        /// Text from String's
-        /// </summary>
-        protected virtual int PressBackAgainToExit { get; } = 0;
-
-        protected virtual int DoubleBackPressedWaitingWindow { get; } = 2000;
-
-        /// <summary>
-        /// If Selected NO && DontAskAgain with the DIalog we Can't exit with the back button 
-        /// Then We can wait for Double Tap to exit         
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IDisposable ExitOnDoubleBackPressed()
-        {
-            var waiting = false;
-
-            var backPressed = Events
-                .Where(e => e.Key == nameof(OnBackPressed))
-                .Where(x => CurrentFragmentManager.IsBackStackEmpty(0)
-                && ExitDialog == null 
-                || ExitDialog.IsDeadLock())
-                .Select(x => waiting)
-                .Timestamp();
-
-            // TODO: Setup from settings 
-            var notify = true;
-            return backPressed
-                .Do(x => Logger.Debug($"Back Pressed: {x}"))
-                .Where(x => !x.Value)
-                .Subscribe( x =>
-                {
-                    waiting = true;
-                    Logger.Debug($"waiting: {waiting}");
-
-                    var exit = backPressed
+        
+        protected virtual IDisposable OnDoubleEvent(IObservable<IEvent> events, 
+            Action action, 
+            int DoubleBackPressedWaitingWindow = 2000)
+        {            
+            return events                
+                //.Timestamp()
+                //.Do(x => Logger.Debug($"Back Pressed: {x}"))                
+                .Subscribe(x =>
+                {                    
+                    events
+                        //.Timestamp()
                         .Take(1)
                         .Timeout(TimeSpan.FromMilliseconds(DoubleBackPressedWaitingWindow))
-                        .Subscribe(e =>
-                            RunOnUiThread(() => {
-                                Logger.Debug($"Exiting");
-                                OnBackPressed(exit: true);
-                            }),
-                            error => Logger.Debug(error.Message)
-                        );
-
-                    if (notify)
-                    {
-                        RunOnUiThread(() =>
-                        {
-                            var makeText = Snackbar.Make(
-                                Window.DecorView.RootView,
-                                PressBackAgainToExit,
-                                Snackbar.LengthShort
-                            );
-
-                            makeText.SetAction("I got it", view =>
-                            {
-                                notify = false;
-                            });
-
-                            makeText.SetCallback(new SnackbarCallback(
-                                onDimissedd: bar =>
-                                {
-                                    exit.Dispose();
-                                    Logger.Debug("Dimissed");
-                                    waiting = false;
-                                    Logger.Debug($"waiting: {waiting}");
-                                }
-                            ));
-
-                            makeText.Show();
-                        });
-                    }                                        
-                });
+                        .Subscribe(e => RunOnUiThread(action), error => Logger.Debug(error.Message));
+                });                       
         }
+   
         
         protected virtual IDialog ExitDialog { get; } = null;
+        
+        protected virtual bool IsDeadLocked(IDialog dialog)
+        {
+            return CurrentFragmentManager.IsBackStackEmpty(0)
+                            && dialog == null
+                            || dialog.IsDeadLocked();
+        }
 
         protected virtual async void Exit()
         {
@@ -339,7 +286,7 @@ namespace SimpleDroid
                 return;
             }
 
-            var result = await ExitDialog.Show(this, !ExitDialog.LastResult.Ok );
+            var result = await ExitDialog.Show(this, !ExitDialog.LastResult.Ok);
 
             // Save it somewhere 
             Logger.Info($"DontAskAgain: {result.DontAskAgain}");
@@ -360,6 +307,7 @@ namespace SimpleDroid
         }
 
         public FragmentManager CurrentFragmentManager => SupportFragmentManager;
+
         protected virtual void OnBackPressed(bool exit)
         {
             if (exit)
@@ -370,8 +318,8 @@ namespace SimpleDroid
             }
 
             if (!CurrentFragmentManager.IsBackStackEmpty())
-            {                
-                CurrentFragmentManager.PopBackStack();             
+            {
+                CurrentFragmentManager.PopBackStack();
                 return;
             }
 

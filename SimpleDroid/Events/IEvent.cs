@@ -1,6 +1,6 @@
 namespace SimpleDroid
 {
-    public interface IEventArgs
+    public interface IEvent
     {
         string Key { get; }
         object Value { get; }

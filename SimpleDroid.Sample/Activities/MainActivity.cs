@@ -2,8 +2,10 @@
 using System.Reactive.Linq;
 using Android.App;
 using Android.OS;
+using Android.Support.Design.Widget;
+using Android.Support.V4.Widget;
 using Android.Views;
-using SimpleDroid.Extensionsss;
+using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace SimpleDroid
 {    
@@ -13,25 +15,33 @@ namespace SimpleDroid
         Theme = "@style/MyTheme",
         Icon = "@drawable/icon")]
     public class MainActivity : ActivityBase
-    {
+    {        
+        public MainActivity()
+        {
+            ExitDialog = TinyIoC.TinyIoCContainer.Current.Resolve<IDialog>(nameof(ExitDialog));            
+        }
+
         #region backing fields
 
         #endregion
 
-        protected override int ActivityLayout { get; } = Resource.Layout.Main;
-        protected override int ToolbarLayout { get; } = Resource.Id.Toolbar;
         protected override int ToolbarTitle { get; } = Resource.String.ApplicationName;
-        protected override int DrawerLayoutID { get; } = Resource.Id.app_bar_main;
-        protected override int NavigationViewID { get; } = Resource.Id.navigation_view;
         public override int FragmentContainerID { get; } = Resource.Id.fragment_container;
-        protected override int PressBackAgainToExit { get; } = Resource.String.press_back_again_to_exit;
-        
+
+
+        private INotification _pressBackAgainToExitNotification;
+        protected override INotification PressBackAgainToExitNotification
+        {
+            get { return _pressBackAgainToExitNotification ?? (_pressBackAgainToExitNotification = new Notification(
+                    GetString(Resource.String.press_back_again_to_exit),
+                    GetString(Resource.String.i_got_it))); }
+        }
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
-            this.When(nameof(base.OnNavigationItemSelected))
+            this.When(nameof(OnNavigationItemSelected))
                 .Select(e => (e.Value as IMenuItem)?.ItemId ?? 0 )
                 .Where(itemId => itemId > 0)
                 .DistinctUntilChanged()
@@ -39,7 +49,7 @@ namespace SimpleDroid
                 .Subscribe(Navigator.Navigate)
                 .ToBeDisposedBy(this);
 
-            this.When(nameof(base.OnNavigationItemSelected))
+            this.When(nameof(OnNavigationItemSelected))
                 .Select(e => (e.Value as IMenuItem)?.ItemId ?? 0 )
                 .Where(itemId => itemId ==  Resource.Id.nav_exit)                        
                 .Subscribe(i=> Exit())
@@ -47,21 +57,11 @@ namespace SimpleDroid
 
         }
 
-        private IDialog _exitDialog;
-
-        protected override IDialog ExitDialog
-        {
-            get
-            {
-                if (_exitDialog != null) return _exitDialog;
-                _exitDialog = Container.ResolveMe<IDialog>();
-                return _exitDialog;
-            }
-        }
-        
-
-    }    
-
-   
+        protected override IDialog ExitDialog { get; }
+        protected override View View => LayoutInflater.Inflate(Resource.Layout.Main, null);
+        protected override Toolbar Toolbar => FindViewById<Toolbar>(Resource.Id.Toolbar);
+        protected override DrawerLayout Drawer => FindViewById<DrawerLayout>(Resource.Id.app_bar_main);
+        protected override NavigationView NavigationView => FindViewById<NavigationView>(Resource.Id.navigation_view);
+    }
 }
 
