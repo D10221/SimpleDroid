@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Support.Design.Widget;
@@ -7,7 +8,7 @@ namespace SimpleDroid
 {
     public interface INotification
     {
-        Task<Notification.IResult> Notify(Activity activity);
+        Task<Notification.IResult> Notify(Activity activity, CancellationToken token);
     }
 
     public class Notification: INotification
@@ -24,9 +25,9 @@ namespace SimpleDroid
             _actionMessage = actionMessage;
         }
 
-        public Task<IResult> Notify(Activity activity)
+        public Task<IResult> Notify(Activity activity, CancellationToken token)
         {
-            var completion = new TaskCompletionSource<IResult>();
+            var completion = new TaskCompletionSource<IResult>(token);
 
             Action notify = () =>
             {
@@ -45,13 +46,12 @@ namespace SimpleDroid
                     // Dimissed 
                     makeText.SetCallback(new SnackbarCallback(s =>
                     {
-                        if (activity.IsDestroyed)return;
-
+                        if (token.IsCancellationRequested) return;
                         completion?.SetResult(new Result());
                     }));
 
                     makeText.Show();
-                }
+                }                
             };
             
             activity.RunOnUiThread(notify);            

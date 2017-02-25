@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityBaseExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DroidApp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\DatabaseFty.cs" />
@@ -45,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\IFragmentFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\DroidConsoleTarget.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notifications\Notification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifications\NotificationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Snackbars\SnackCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\InjectAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TinyIoc\Injector.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Reactive.Linq;
+using System.Threading;
 
 namespace SimpleDroid
 {
@@ -11,26 +12,18 @@ namespace SimpleDroid
         }
 
         /// <summary>
-        /// TODO: -> NotificationManager IsDisable(INotification) 
-        /// </summary>        
-        public static IDisposable SubscribeNotification(
-            this ActivityBase activity,
-            IObservable<IEvent> activityEvents,
-            INotification notification)
+        /// Once
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <returns></returns>
+        public static IObservable<ActivityState> OnDestroying(this ActivityBase activity)
         {
-            var waiting = false;
-            var notify = true;
-            
-                return activityEvents
-                    .Select(x => waiting)
-                    .Where(wait => !wait)
-                    .TakeWhile(x => notify)
-                    .Subscribe(async x =>
-                    {
-                        var result = await notification.Notify(activity);
-                        notify = !result.Ok;
-                        waiting = false;
-                    });        
-        }
-    }
+            return activity
+                .Events
+                .Where(e => e.Key == nameof(ActivityBase.ActivityState))
+                .Select(x => (ActivityState) x.Value)
+                .Where(state => state == ActivityState.Destroying)
+                .Take(1);
+        }       
+    }    
 }

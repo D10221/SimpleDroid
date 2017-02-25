@@ -65,8 +65,7 @@ namespace SimpleDroid
             {
                 var events = this.WhenBackPressed().Where(x => IsDeadLocked(ExitDialog));
 
-                OnDoubleEvent(
-                    events: events,
+                events.OnDoubleEvent(                    
                     action: () => OnBackPressed(exit: true)
                 ).ToBeDisposedBy(this);
 
@@ -78,8 +77,7 @@ namespace SimpleDroid
             else
             {
 
-                OnDoubleEvent(
-                    events: this.WhenBackPressed(),
+                this.WhenBackPressed().OnDoubleEvent(                    
                     action: () => OnBackPressed(exit: true)
                 ).ToBeDisposedBy(this);
 
@@ -181,7 +179,7 @@ namespace SimpleDroid
         }
 
         public virtual int FragmentContainerID { get; } = 0;
-        public ViewState ViewState { get; private set; }
+        public ActivityState ActivityState { get; private set; }
 
         private readonly Subject<IEvent> _events = new Subject<IEvent>();
 
@@ -209,65 +207,49 @@ namespace SimpleDroid
 
         protected override void OnRestart()
         {
-            ViewState = ViewState.Restarting;
+            ActivityState = ActivityState.Restarting;
             RaiseEvent();
             base.OnRestart();
         }
 
         protected override void OnResume()
         {
-            ViewState = ViewState.Resuming;
+            ActivityState = ActivityState.Resuming;
             RaiseEvent();
             base.OnResume();
         }
 
         protected override void OnStart()
         {
-            ViewState = ViewState.Starting;
+            ActivityState = ActivityState.Starting;
             RaiseEvent();
             base.OnStart();
         }
 
         protected override void OnPause()
         {
-            ViewState = ViewState.Pausing;
+            ActivityState = ActivityState.Pausing;
             RaiseEvent();
             base.OnPause();
         }
 
         protected override void OnStop()
         {
-            ViewState = ViewState.Stopping;
+            ActivityState = ActivityState.Stopping;
             RaiseEvent();
             base.OnStop();
         }
 
         protected override void OnDestroy()
         {
-            ViewState = ViewState.Destroying;
+            ActivityState = ActivityState.Destroying;
             RaiseEvent();
             Subscriptions.Dispose();
             base.OnDestroy();
         }
 
         
-        protected virtual IDisposable OnDoubleEvent(IObservable<IEvent> events, 
-            Action action, 
-            int DoubleBackPressedWaitingWindow = 2000)
-        {            
-            return events                
-                //.Timestamp()
-                //.Do(x => Logger.Debug($"Back Pressed: {x}"))                
-                .Subscribe(x =>
-                {                    
-                    events
-                        //.Timestamp()
-                        .Take(1)
-                        .Timeout(TimeSpan.FromMilliseconds(DoubleBackPressedWaitingWindow))
-                        .Subscribe(e => RunOnUiThread(action), error => Logger.Debug(error.Message));
-                });                       
-        }
-   
+      
         
         protected virtual IDialog ExitDialog { get; } = null;
         

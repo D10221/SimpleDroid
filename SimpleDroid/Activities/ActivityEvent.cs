@@ -12,14 +12,4 @@ namespace SimpleDroid
 
         public object Value { get; }
     }
-
-    public enum ViewState
-    {
-        Restarting,
-        Resuming,
-        Starting,
-        Destroying,
-        Pausing,
-        Stopping
-    }
 }
