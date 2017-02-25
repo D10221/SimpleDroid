@@ -44,8 +44,9 @@ namespace SimpleDroid
                    
                     // Dimissed 
                     makeText.SetCallback(new SnackbarCallback(s =>
-                    {   
-                        // TODO: Prevent Exception if Activity//Snackbar closing/closed/Disposed/etc...  , return 
+                    {
+                        if (activity.IsDestroyed)return;
+
                         completion?.SetResult(new Result());
                     }));
 
