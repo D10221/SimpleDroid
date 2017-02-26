@@ -7,4 +7,5 @@
      android:layout_height="match_parent"
      android:layout_gravity="start"
      app:headerLayout="@layout/navigation_view_header"
-     app:menu="@layout/navigation_view_menu"/>
+     app:menu="@layout/navigation_view_menu"
+     app:itemTextAppearance="@style/NavDrawerTextStyle"/>

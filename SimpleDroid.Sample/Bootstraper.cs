@@ -1,20 +1,14 @@
 using System;
-using Android.App;
+using NLog;
 using SimpleDroid.Db;
+using SimpleDroid.Dialogs;
 using TinyIoC;
+using Fragment =  Android.Support.V4.App.Fragment;
 
 namespace SimpleDroid
 {
-    public class Bootstraper : ITinyIocBootstraper // : TinyIoC.Bootstraper
-    {
-        private static ITinyIocBootstraper _default;
-
-        public static ITinyIocBootstraper Default => _default ?? (_default = new Bootstraper());
-
-        private Bootstraper()
-        {
-            _default = this;
-        }
+    public class Bootstraper : ITinyIocBootstraper
+    {        
         public void ConfigureApplicationContainer(TinyIoCContainer container)
         {                        
             container.Register<IDatabaseFty, DatabaseFty>();
@@ -23,12 +17,21 @@ namespace SimpleDroid
             container.Register<IFragmentFactory, FragmentFactory>().AsSingleton();
             container.Register<Fragment, Views.HomeView>(Resource.Id.nav_home.ToString());
             container.Register<Fragment, Views.MessagesView>(Resource.Id.nav_messages.ToString());
+            container.Register<Fragment, Views.SettingsView>(Resource.Id.nav_settings.ToString());
+
+            //Dialogs 
+            container.Register<IDialog, ExitDialog>(nameof(ExitDialog));
 
             IDatabase db = null;
             Func<TinyIoCContainer, NamedParameterOverloads, IDatabase> database =
                 (c, parameters) =>
                     db ?? (db = new Database(c.Resolve<IDatabaseFty>()));
             container.Register(database);
+
+
+            container.Register<Func<object, ILogger>>((target => LogManager.GetLogger(target.GetType().Name)));
+
+            container.Register<INavigatorFty, NavigatorFty>();
         }
     }
 }

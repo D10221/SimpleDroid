@@ -18,5 +18,10 @@ namespace TinyIoC
         /// If true PropertyName will be used as Name
         /// </summary>
         public bool IsNamed { get; set; }
+
+        /// <summary>
+        /// May Not reolve
+        /// </summary>
+        public bool Optional { get; set; }
     }
 }
