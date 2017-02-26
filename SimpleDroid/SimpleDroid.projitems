@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Activities\ActivityState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Application\DroidApp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\Command.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\DatabaseFty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\DbExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Db\EnityBaseExtensions.cs" />
@@ -41,10 +42,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\MyAndroidRxExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\TextViewExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentBaseExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\FragmentNavigator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fragments\IFragmentFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\DroidConsoleTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MenuItems\MenuItemExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notifications\Notification.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notifications\NotificationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Snackbars\SnackCallback.cs" />

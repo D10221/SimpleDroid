@@ -247,9 +247,6 @@ namespace SimpleDroid
             Subscriptions.Dispose();
             base.OnDestroy();
         }
-
-        
-      
         
         protected virtual IDialog ExitDialog { get; } = null;
         

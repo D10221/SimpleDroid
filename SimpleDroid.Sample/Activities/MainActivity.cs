@@ -59,7 +59,15 @@ namespace SimpleDroid
 
         protected override IDialog ExitDialog { get; }
         protected override View View => LayoutInflater.Inflate(Resource.Layout.Main, null);
-        protected override Toolbar Toolbar => FindViewById<Toolbar>(Resource.Id.Toolbar);
+        protected override Toolbar Toolbar
+        {
+            get
+            {
+                var toolbar = FindViewById<Toolbar>(Resource.Id.Toolbar);
+                return toolbar;
+            }
+        }
+
         protected override DrawerLayout Drawer => FindViewById<DrawerLayout>(Resource.Id.app_bar_main);
         protected override NavigationView NavigationView => FindViewById<NavigationView>(Resource.Id.navigation_view);
     }
